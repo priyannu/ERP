@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusOne ERP — Student Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET & VARIABLES ──────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;
+  --surface:#151821;
+  --surface2:#1c2030;
+  --surface3:#232840;
+  --border:#2a2f45;
+  --accent:#5b8fff;
+  --accent2:#a78bfa;
+  --accent3:#34d399;
+  --accent4:#f59e0b;
+  --accent5:#f87171;
+  --text:#e8eaf6;
+  --text2:#8b90a8;
+  --text3:#5a5f78;
+  --radius:14px;
+  --radius-sm:8px;
+  --shadow:0 4px 24px rgba(0,0,0,.45);
+  --sidebar:260px;
+  --font:'DM Sans',sans-serif;
+  --font-head:'Syne',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;display:flex}
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────── */
+#sidebar{
+  width:var(--sidebar);min-width:var(--sidebar);height:100vh;position:fixed;top:0;left:0;
+  background:var(--surface);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:100;transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;
+}
+.sb-logo{padding:28px 24px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sb-logo-inner{display:flex;align-items:center;gap:12px}
+.sb-logo-mark{width:38px;height:38px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.sb-logo h1{font-family:var(--font-head);font-size:17px;letter-spacing:-.3px;line-height:1.1}
+.sb-logo h1 span{color:var(--accent);display:block;font-size:10px;letter-spacing:2px;font-family:var(--font);font-weight:500;text-transform:uppercase;color:var(--text2)}
+.sb-profile{padding:16px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s}
+.sb-profile:hover{background:var(--surface2)}
+.sb-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#5b8fff44,#a78bfa44);border:2px solid var(--accent);display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--accent);flex-shrink:0}
+.sb-profile-info{flex:1;min-width:0}
+.sb-profile-info strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-profile-info small{color:var(--text2);font-size:11px}
+.sb-badge{background:var(--accent);color:#fff;font-size:9px;padding:2px 7px;border-radius:99px;font-weight:700;white-space:nowrap}
+.sb-status{display:flex;align-items:center;gap:6px;padding:12px 24px;border-bottom:1px solid var(--border)}
+.sb-status-dot{width:8px;height:8px;border-radius:50%;background:var(--accent3);box-shadow:0 0 0 3px #34d39933;animation:pulse 2s infinite}
+.sb-status span{font-size:11px;color:var(--text2)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px #34d39933}50%{box-shadow:0 0 0 6px #34d39911}}
+.sb-nav{flex:1;padding:12px 0;overflow-y:auto}
+.sb-section-label{font-size:10px;text-transform:uppercase;letter-spacing:2px;color:var(--text3);padding:14px 24px 6px;font-weight:600}
+.sb-item{display:flex;align-items:center;gap:12px;padding:10px 24px;cursor:pointer;transition:all .15s;position:relative;color:var(--text2);font-size:13.5px;font-weight:500;border:none;background:none;width:100%;text-align:left}
+.sb-item:hover{background:var(--surface2);color:var(--text)}
+.sb-item.active{background:linear-gradient(90deg,#5b8fff18,transparent);color:var(--accent)}
+.sb-item.active::before{content:'';position:absolute;left:0;top:10%;height:80%;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.sb-item-icon{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.sb-item-badge{margin-left:auto;background:var(--accent5);color:#fff;font-size:9px;padding:2px 6px;border-radius:99px;font-weight:700}
+.sb-item-badge.green{background:var(--accent3)}
+.sb-item-badge.yellow{background:var(--accent4)}
+.sb-footer{padding:16px 24px;border-top:1px solid var(--border);flex-shrink:0}
+.sb-type-toggle{display:flex;background:var(--surface2);border-radius:var(--radius-sm);padding:4px;gap:4px}
+.sb-type-btn{flex:1;padding:7px;border:none;background:none;color:var(--text2);font-size:11px;font-family:var(--font);font-weight:600;border-radius:6px;cursor:pointer;transition:all .15s;text-align:center}
+.sb-type-btn.active{background:var(--accent);color:#fff}
+
+/* ─── MAIN ───────────────────────────────────────────────────────────── */
+#main{margin-left:var(--sidebar);flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{height:64px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:16px;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--font-head);font-size:18px;font-weight:800;flex:1}
+.topbar-search{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;width:260px;transition:border-color .15s}
+.topbar-search:focus-within{border-color:var(--accent)}
+.topbar-search input{border:none;background:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%}
+.topbar-search input::placeholder{color:var(--text3)}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.topbar-btn{width:38px;height:38px;border-radius:var(--radius-sm);background:var(--surface2);border:1px solid var(--border);display:grid;place-items:center;cursor:pointer;font-size:16px;transition:all .15s;position:relative}
+.topbar-btn:hover{background:var(--surface3);border-color:var(--accent)}
+.notif-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--accent5);border-radius:50%;border:2px solid var(--surface)}
+.menu-btn{display:none;background:none;border:none;color:var(--text);font-size:22px;cursor:pointer;padding:4px}
+
+/* ─── PAGE CONTENT ───────────────────────────────────────────────────── */
+.page{display:none;padding:32px;flex:1;animation:fadeSlide .25s ease}
+.page.active{display:block}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── CARDS ──────────────────────────────────────────────────────────── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:border-color .2s}
+.card:hover{border-color:var(--surface3)}
+.card-title{font-family:var(--font-head);font-size:15px;font-weight:700;margin-bottom:4px}
+.card-sub{font-size:12px;color:var(--text2);margin-bottom:16px}
+
+/* ─── GRID HELPERS ───────────────────────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+
+/* ─── STAT CARDS ─────────────────────────────────────────────────────── */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;display:flex;align-items:center;gap:16px;transition:all .2s;cursor:default}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;font-size:22px;flex-shrink:0}
+.stat-icon.blue{background:#5b8fff18;color:var(--accent)}
+.stat-icon.purple{background:#a78bfa18;color:var(--accent2)}
+.stat-icon.green{background:#34d39918;color:var(--accent3)}
+.stat-icon.yellow{background:#f59e0b18;color:var(--accent4)}
+.stat-icon.red{background:#f8717118;color:var(--accent5)}
+.stat-info{}
+.stat-val{font-family:var(--font-head);font-size:26px;font-weight:800;line-height:1}
+.stat-label{font-size:12px;color:var(--text2);margin-top:4px}
+.stat-trend{font-size:11px;font-weight:600}
+.stat-trend.up{color:var(--accent3)}
+.stat-trend.down{color:var(--accent5)}
+
+/* ─── PILLS / TAGS ───────────────────────────────────────────────────── */
+.pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:600}
+.pill.blue{background:#5b8fff18;color:var(--accent)}
+.pill.green{background:#34d39918;color:var(--accent3)}
+.pill.yellow{background:#f59e0b18;color:var(--accent4)}
+.pill.red{background:#f8717118;color:var(--accent5)}
+.pill.purple{background:#a78bfa18;color:var(--accent2)}
+.pill.gray{background:var(--surface2);color:var(--text2)}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#4a7aef;transform:translateY(-1px)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface3);border-color:var(--accent)}
+.btn-danger{background:#f8717118;color:var(--accent5);border:1px solid #f8717133}
+.btn-danger:hover{background:#f87171;color:#fff}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-xs{padding:4px 10px;font-size:11px}
+
+/* ─── PROGRESS ───────────────────────────────────────────────────────── */
+.progress-bar{height:6px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.progress-fill.blue{background:linear-gradient(90deg,var(--accent),#a78bfa)}
+.progress-fill.green{background:var(--accent3)}
+.progress-fill.yellow{background:var(--accent4)}
+.progress-fill.red{background:var(--accent5)}
+
+/* ─── TABLE ──────────────────────────────────────────────────────────── */
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);padding:12px 16px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);font-weight:600;white-space:nowrap}
+td{padding:13px 16px;border-top:1px solid var(--border);color:var(--text);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+
+/* ─── FORM ELEMENTS ──────────────────────────────────────────────────── */
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px}
+.form-control{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:11px 14px;color:var(--text);font-family:var(--font);font-size:13.5px;outline:none;transition:border-color .15s}
+.form-control:focus{border-color:var(--accent)}
+.form-control::placeholder{color:var(--text3)}
+select.form-control{cursor:pointer}
+textarea.form-control{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* ─── ALERT / NOTICE ─────────────────────────────────────────────────── */
+.alert{padding:14px 18px;border-radius:var(--radius-sm);font-size:13px;display:flex;align-items:flex-start;gap:10px;border-left:4px solid}
+.alert.info{background:#5b8fff11;border-color:var(--accent);color:var(--text)}
+.alert.success{background:#34d39911;border-color:var(--accent3)}
+.alert.warn{background:#f59e0b11;border-color:var(--accent4)}
+.alert.danger{background:#f8717111;border-color:var(--accent5)}
+
+/* ─── TIMELINE ───────────────────────────────────────────────────────── */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:flex;gap:16px;padding:14px 0;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:17px;top:40px;bottom:0;width:2px;background:var(--border)}
+.tl-dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex-shrink:0;border:2px solid var(--border)}
+.tl-content{flex:1;padding-top:6px}
+.tl-title{font-size:13.5px;font-weight:600;margin-bottom:3px}
+.tl-meta{font-size:11px;color:var(--text2)}
+
+/* ─── NOTICE CARDS ───────────────────────────────────────────────────── */
+.notice-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;gap:14px;transition:all .2s;cursor:pointer}
+.notice-card:hover{border-color:var(--accent);background:var(--surface2)}
+.notice-card.unread{border-left:3px solid var(--accent)}
+.notice-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:18px;flex-shrink:0}
+.notice-body{flex:1}
+.notice-title{font-size:13.5px;font-weight:600;margin-bottom:4px}
+.notice-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.notice-foot{display:flex;align-items:center;justify-content:space-between;margin-top:8px}
+.notice-time{font-size:11px;color:var(--text3)}
+
+/* ─── DASHBOARD SPECIFIC ─────────────────────────────────────────────── */
+.welcome-banner{background:linear-gradient(135deg,#1a2040,#1c2850);border:1px solid #3a4a80;border-radius:var(--radius);padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden}
+.welcome-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,#5b8fff22 0%,transparent 70%)}
+.welcome-banner::after{content:'';position:absolute;right:60px;bottom:-40px;width:140px;height:140px;background:radial-gradient(circle,#a78bfa18 0%,transparent 70%)}
+.wb-chip{display:inline-flex;align-items:center;gap:6px;background:#5b8fff1a;border:1px solid #5b8fff33;padding:4px 12px;border-radius:99px;font-size:11px;color:var(--accent);font-weight:600;margin-bottom:12px}
+.wb-title{font-family:var(--font-head);font-size:26px;font-weight:800;margin-bottom:6px}
+.wb-sub{font-size:14px;color:var(--text2);max-width:500px}
+.wb-actions{display:flex;gap:10px;margin-top:20px}
+.quick-actions{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:28px}
+.qa-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center}
+.qa-item:hover{border-color:var(--accent);background:var(--surface2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.qa-icon{font-size:26px}
+.qa-label{font-size:12px;font-weight:600;color:var(--text2)}
+
+/* ─── ATTENDANCE RINGS ───────────────────────────────────────────────── */
+.attendance-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.att-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:all .2s}
+.att-card:hover{border-color:var(--accent2)}
+.ring-wrap{position:relative;width:90px;height:90px;margin:0 auto 14px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--surface2);stroke-width:8}
+.ring-fill{fill:none;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1)}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-head);font-size:18px;font-weight:800}
+.ring-pct{font-size:9px;font-weight:500;color:var(--text2)}
+.att-subject{font-size:13px;font-weight:600;margin-bottom:4px}
+.att-counts{font-size:11px;color:var(--text2)}
+
+/* ─── SEMESTER RESULT ────────────────────────────────────────────────── */
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.gpa-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:12px;padding:16px 24px;text-align:center}
+.gpa-val{font-family:var(--font-head);font-size:36px;font-weight:800}
+.gpa-label{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px}
+
+/* ─── LIBRARY ────────────────────────────────────────────────────────── */
+.book-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .2s;cursor:pointer}
+.book-card:hover{border-color:var(--accent2);transform:translateY(-3px);box-shadow:var(--shadow)}
+.book-cover{height:120px;display:flex;align-items:center;justify-content:center;font-size:40px;position:relative}
+.book-info{padding:14px}
+.book-title{font-size:13px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-author{font-size:11px;color:var(--text2);margin-bottom:10px}
+
+/* ─── FACULTY ────────────────────────────────────────────────────────── */
+.faculty-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;gap:16px;align-items:center;transition:all .2s}
+.faculty-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.faculty-avatar{width:60px;height:60px;border-radius:14px;display:grid;place-items:center;font-size:22px;font-weight:800;color:#fff;flex-shrink:0}
+.faculty-info{flex:1}
+.faculty-name{font-size:15px;font-weight:700;margin-bottom:3px}
+.faculty-dept{font-size:12px;color:var(--text2);margin-bottom:8px}
+.faculty-actions{display:flex;gap:8px}
+
+/* ─── FEES ───────────────────────────────────────────────────────────── */
+.fee-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.fee-item:last-child{border-bottom:none}
+.fee-name{font-size:13.5px;font-weight:500}
+.fee-amount{font-family:var(--font-mono);font-size:14px;font-weight:600}
+.fee-total{font-family:var(--font-mono);font-size:22px;font-weight:800;color:var(--accent)}
+
+/* ─── MESS ───────────────────────────────────────────────────────────── */
+.meal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .2s}
+.meal-card:hover{border-color:var(--accent3)}
+.meal-header{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.meal-type{font-size:13px;font-weight:700}
+.meal-time{font-size:11px;color:var(--text2)}
+.meal-body{padding:16px 18px}
+.meal-item{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px}
+.meal-dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);flex-shrink:0}
+
+/* ─── HOSTEL SPECIFIC ────────────────────────────────────────────────── */
+.room-info-card{background:linear-gradient(135deg,#1a2040,#1c2850);border:1px solid #3a4a80;border-radius:var(--radius);padding:24px;position:relative;overflow:hidden}
+.room-info-card::before{content:'🏠';position:absolute;right:20px;top:20px;font-size:60px;opacity:.15}
+
+/* ─── TECH HELP ──────────────────────────────────────────────────────── */
+.ticket-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all .2s}
+.ticket-card:hover{border-color:var(--accent)}
+.ticket-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.ticket-title{font-size:13.5px;font-weight:600}
+.ticket-id{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.ticket-foot{display:flex;align-items:center;gap:10px}
+.ticket-time{font-size:11px;color:var(--text3)}
+
+/* ─── DISPENSARY ─────────────────────────────────────────────────────── */
+.appt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;gap:14px;transition:all .2s}
+.appt-card:hover{border-color:var(--accent3)}
+.appt-date-box{min-width:58px;height:58px;background:var(--surface2);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0}
+.appt-day{font-family:var(--font-head);font-size:22px;font-weight:800;line-height:1}
+.appt-month{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+
+/* ─── COURSE REGISTRATION ────────────────────────────────────────────── */
+.course-row{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.course-row:last-child{border-bottom:none}
+.course-row:hover{background:var(--surface2)}
+.course-code{font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px}
+.course-name{font-size:13.5px;font-weight:600}
+.course-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.credit-badge{background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)}
+
+/* ─── ASSIGNMENT ─────────────────────────────────────────────────────── */
+.asgn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .2s}
+.asgn-card:hover{border-color:var(--accent)}
+.asgn-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.asgn-title{font-size:14px;font-weight:700}
+.asgn-course{font-size:11px;color:var(--text2);margin-top:2px}
+.asgn-due{font-size:12px;font-weight:600}
+.asgn-progress{margin-bottom:14px}
+.asgn-foot{display:flex;align-items:center;gap:10px}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius-sm);padding:24px;text-align:center;cursor:pointer;transition:all .2s;margin-top:12px}
+.upload-zone:hover{border-color:var(--accent);background:#5b8fff08}
+.upload-zone.dragging{border-color:var(--accent3);background:#34d39908}
+
+/* ─── MODAL ──────────────────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:18px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;animation:modalIn .25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-head{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-head);font-size:17px;font-weight:800}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--surface2);border:none;color:var(--text2);font-size:18px;cursor:pointer;display:grid;place-items:center;transition:all .15s}
+.modal-close:hover{background:var(--surface3);color:var(--text)}
+.modal-body{padding:24px 28px}
+.modal-foot{padding:16px 28px 24px;display:flex;gap:10px;justify-content:flex-end}
+
+/* ─── TOAST ──────────────────────────────────────────────────────────── */
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:10px}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;display:flex;align-items:center;gap:12px;font-size:13px;min-width:280px;animation:toastIn .3s ease;box-shadow:var(--shadow)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast-icon{font-size:18px}
+.toast-text{flex:1}
+.toast-close{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0}
+.toast.success{border-left:3px solid var(--accent3)}
+.toast.error{border-left:3px solid var(--accent5)}
+.toast.info{border-left:3px solid var(--accent)}
+
+/* ─── TABS ───────────────────────────────────────────────────────────── */
+.tabs{display:flex;gap:4px;background:var(--surface2);border-radius:var(--radius-sm);padding:4px;margin-bottom:24px;overflow-x:auto}
+.tab{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--text2);white-space:nowrap;transition:all .15s}
+.tab.active{background:var(--surface);color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+
+/* ─── CALENDAR ───────────────────────────────────────────────────────── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-hdr{text-align:center;font-size:11px;color:var(--text3);font-weight:600;padding:6px 0;text-transform:uppercase}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .15s;position:relative}
+.cal-day:hover{background:var(--surface2)}
+.cal-day.today{background:var(--accent);color:#fff;font-weight:700}
+.cal-day.has-event::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent3)}
+.cal-day.other-month{color:var(--text3)}
+
+/* ─── SECTION HEADERS ────────────────────────────────────────────────── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-title{font-family:var(--font-head);font-size:18px;font-weight:800}
+.section-sub{font-size:12px;color:var(--text2);margin-top:2px}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────── */
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  .menu-btn{display:block}
+  .grid-4{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+  .grid-2{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .topbar-search{display:none}
+}
+@media(max-width:600px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-3{grid-template-columns:1fr}
+  .page{padding:20px 16px}
+  .wb-title{font-size:20px}
+}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;backdrop-filter:blur(2px)}
+.sb-overlay.open{display:block}
+</style>
+</head>
+<body>
+
+<!-- ─── SIDEBAR ──────────────────────────────────────────────────────── -->
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sb-logo">
+    <div class="sb-logo-inner">
+      <div class="sb-logo-mark">🎓</div>
+      <h1>CampusOne<span>Student Portal</span></h1>
+    </div>
+  </div>
+  <div class="sb-profile" onclick="navigate('dashboard')">
+    <div class="sb-avatar">RK</div>
+    <div class="sb-profile-info">
+      <strong>Rahul Kumar</strong>
+      <small>CS-2021-0842</small>
+    </div>
+    <span class="sb-badge" id="studentTypeLabel">Hostel</span>
+  </div>
+  <div class="sb-status">
+    <div class="sb-status-dot"></div>
+    <span>Semester 6 · Active</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item active" data-page="dashboard" onclick="navigate('dashboard')"><span class="sb-item-icon">⊞</span>Dashboard</button>
+    <button class="sb-item" data-page="notices" onclick="navigate('notices')"><span class="sb-item-icon">🔔</span>Notices & Alerts<span class="sb-item-badge">3</span></button>
+    <button class="sb-item" data-page="calendar-page" onclick="navigate('calendar-page')"><span class="sb-item-icon">📅</span>Academic Calendar</button>
+    <div class="sb-section-label">Academics</div>
+    <button class="sb-item" data-page="courses" onclick="navigate('courses')"><span class="sb-item-icon">📚</span>Course Registration</button>
+    <button class="sb-item" data-page="assignments" onclick="navigate('assignments')"><span class="sb-item-icon">📝</span>Assignments<span class="sb-item-badge yellow">2</span></button>
+    <button class="sb-item" data-page="attendance" onclick="navigate('attendance')"><span class="sb-item-icon">✅</span>Attendance</button>
+    <button class="sb-item" data-page="results" onclick="navigate('results')"><span class="sb-item-icon">🏆</span>Semester Results</button>
+    <button class="sb-item" data-page="library" onclick="navigate('library')"><span class="sb-item-icon">🏛</span>Library</button>
+    <div class="sb-section-label">Campus Life</div>
+    <button class="sb-item" data-page="faculty" onclick="navigate('faculty')"><span class="sb-item-icon">👨‍🏫</span>Faculty Info</button>
+    <button class="sb-item" data-page="fees" onclick="navigate('fees')"><span class="sb-item-icon">💳</span>Fees & Payments</button>
+    <button class="sb-item" data-page="dispensary" onclick="navigate('dispensary')"><span class="sb-item-icon">🏥</span>Dispensary</button>
+    <button class="sb-item" data-page="tech-help" onclick="navigate('tech-help')"><span class="sb-item-icon">🔧</span>Technical Help<span class="sb-item-badge red">1</span></button>
+    <div class="sb-section-label" id="hostelSection">Hostel</div>
+    <button class="sb-item" id="hostelMenu1" data-page="hostel" onclick="navigate('hostel')"><span class="sb-item-icon">🏠</span>My Hostel Room</button>
+    <button class="sb-item" id="hostelMenu2" data-page="mess" onclick="navigate('mess')"><span class="sb-item-icon">🍽</span>Mess & Food</button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Student Type</div>
+    <div class="sb-type-toggle">
+      <button class="sb-type-btn active" id="hostelBtn" onclick="setStudentType('hostel')">🏠 Hostel</button>
+      <button class="sb-type-btn" id="dayBtn" onclick="setStudentType('day')">☀️ Day Scholar</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── MAIN ─────────────────────────────────────────────────────────── -->
+<div id="main">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-search">
+      <span style="color:var(--text3)">🔍</span>
+      <input type="text" placeholder="Search courses, faculty, notices…">
+    </div>
+    <div class="topbar-actions">
+      <div class="topbar-btn" onclick="navigate('notices')" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-btn" onclick="showToast('Profile settings coming soon','info')" title="Settings">⚙️</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22);border-color:var(--accent);color:var(--accent);font-weight:700;font-size:13px">RK</div>
+    </div>
+  </header>
+
+  <!-- ══════════════ DASHBOARD ══════════════ -->
+  <div class="page active" id="page-dashboard">
+    <div class="welcome-banner">
+      <div class="wb-chip">✨ Semester 6 · Ongoing</div>
+      <div class="wb-title">Good morning, Rahul! 👋</div>
+      <div class="wb-sub">You have 2 assignments due this week and 1 pending fee. Stay on track!</div>
+      <div class="wb-actions">
+        <button class="btn btn-primary" onclick="navigate('assignments')">📝 View Assignments</button>
+        <button class="btn btn-secondary" onclick="navigate('fees')">💳 Pay Fees</button>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon blue">📊</div><div class="stat-info"><div class="stat-val">78%</div><div class="stat-label">Attendance</div><div class="stat-trend up">↑ 2% this week</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">🎯</div><div class="stat-info"><div class="stat-val">8.4</div><div class="stat-label">Current CGPA</div><div class="stat-trend up">↑ 0.2 from last sem</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">📝</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">Pending Assignments</div><div class="stat-trend down">Due soon!</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">📚</div><div class="stat-info"><div class="stat-val">5</div><div class="stat-label">Active Courses</div><div class="stat-trend up">18 credits</div></div></div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-head"><div><div class="section-title">Quick Actions</div><div class="section-sub">Frequently used features</div></div></div>
+    <div class="quick-actions" style="margin-bottom:28px">
+      <div class="qa-item" onclick="navigate('assignments')"><div class="qa-icon">📤</div><div class="qa-label">Submit Assignment</div></div>
+      <div class="qa-item" onclick="navigate('results')"><div class="qa-icon">📊</div><div class="qa-label">View Results</div></div>
+      <div class="qa-item" onclick="navigate('library')"><div class="qa-icon">🏛</div><div class="qa-label">Library Access</div></div>
+      <div class="qa-item" onclick="navigate('dispensary')"><div class="qa-icon">💊</div><div class="qa-label">Book Appointment</div></div>
+      <div class="qa-item" onclick="navigate('tech-help')"><div class="qa-icon">🔧</div><div class="qa-label">Raise Ticket</div></div>
+      <div class="qa-item" onclick="navigate('mess')"><div class="qa-icon">🍽</div><div class="qa-label">Today's Menu</div></div>
+      <div class="qa-item" onclick="navigate('fees')"><div class="qa-icon">💳</div><div class="qa-label">Pay Fees</div></div>
+      <div class="qa-item" onclick="navigate('courses')"><div class="qa-icon">📋</div><div class="qa-label">Register Course</div></div>
+    </div>
+
+    <div class="grid-2">
+      <!-- Recent Notices -->
+      <div>
+        <div class="section-head" style="margin-bottom:14px"><div><div class="section-title">Recent Notices</div></div><button class="btn btn-secondary btn-sm" onclick="navigate('notices')">View All</button></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="notice-card unread" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#5b8fff18">📢</div>
+            <div class="notice-body">
+              <div class="notice-title">End Semester Exam Schedule Released</div>
+              <div class="notice-desc">Final exam timetable for Semester 6 is now available. Check your hall tickets.</div>
+              <div class="notice-foot"><span class="notice-time">2 hours ago</span><span class="pill blue">Academic</span></div>
+            </div>
+          </div>
+          <div class="notice-card unread" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#f59e0b18">⚠️</div>
+            <div class="notice-body">
+              <div class="notice-title">Fee Payment Deadline: March 31</div>
+              <div class="notice-desc">Last date for semester fee payment without penalty. Pay before deadline.</div>
+              <div class="notice-foot"><span class="notice-time">1 day ago</span><span class="pill yellow">Finance</span></div>
+            </div>
+          </div>
+          <div class="notice-card" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#34d39918">🏆</div>
+            <div class="notice-body">
+              <div class="notice-title">Hackathon 2024 — Registrations Open</div>
+              <div class="notice-desc">Annual college hackathon. Form teams of 3-4. Register by March 28.</div>
+              <div class="notice-foot"><span class="notice-time">3 days ago</span><span class="pill green">Event</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Schedule -->
+      <div>
+        <div class="section-head" style="margin-bottom:14px"><div><div class="section-title">Today's Schedule</div><div class="section-sub">Wednesday, March 25</div></div></div>
+        <div class="card" style="padding:16px">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#5b8fff18;border-color:var(--accent);color:var(--accent)">📘</div>
+              <div class="tl-content"><div class="tl-title">Data Structures & Algorithms</div><div class="tl-meta">09:00 – 10:00 AM · Room 302 · Dr. Priya Sharma</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#a78bfa18;border-color:var(--accent2);color:var(--accent2)">⚙️</div>
+              <div class="tl-content"><div class="tl-title">Operating Systems Lab</div><div class="tl-meta">10:30 – 12:30 PM · Lab 2 · Prof. Anand Mehta</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3)">🍽</div>
+              <div class="tl-content"><div class="tl-title">Lunch Break</div><div class="tl-meta">12:30 – 1:30 PM · Cafeteria / Mess Hall</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4)">🌐</div>
+              <div class="tl-content"><div class="tl-title">Computer Networks</div><div class="tl-meta">1:30 – 2:30 PM · Room 214 · Dr. Rajan Patel</div></div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot" style="background:#f8717118;border-color:var(--accent5);color:var(--accent5)">📝</div>
+              <div class="tl-content"><div class="tl-title">ML Assignment Due</div><div class="tl-meta">11:59 PM · Online Submission</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ NOTICES ══════════════ -->
+  <div class="page" id="page-notices">
+    <div class="section-head"><div><div class="section-title">Notices & Alerts</div><div class="section-sub">Stay updated with campus announcements</div></div><button class="btn btn-secondary btn-sm" onclick="showToast('All notices marked as read','success')">Mark All Read</button></div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">All</button>
+      <button class="tab" onclick="setTab(this)">Academic</button>
+      <button class="tab" onclick="setTab(this)">Finance</button>
+      <button class="tab" onclick="setTab(this)">Events</button>
+      <button class="tab" onclick="setTab(this)">Hostel</button>
+      <button class="tab" onclick="setTab(this)">Emergency</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="alert info">📌 <span>3 new unread notices since your last visit.</span></div>
+      <div class="notice-card unread">
+        <div class="notice-icon" style="background:#5b8fff18;font-size:22px">📢</div>
+        <div class="notice-body">
+          <div class="notice-title">End Semester Exam Schedule Released</div>
+          <div class="notice-desc">Final exam timetable for Semester 6 is now available on the portal. Hall tickets will be distributed by the examination section from March 28. Students are advised to check their schedules carefully and report any discrepancies immediately.</div>
+          <div class="notice-foot"><span class="notice-time">2 hours ago</span><span class="pill blue">Academic</span></div>
+        </div>
+      </div>
+      <div class="notice-card unread">
+        <div class="notice-icon" style="background:#f59e0b18;font-size:22px">⚠️</div>
+        <div class="notice-body">
+          <div class="notice-title">Fee Payment Deadline: March 31, 2024</div>
+          <div class="notice-desc">This is a reminder that the last date for semester fee payment without late penalty is March 31, 2024. Students who fail to pay by this date will incur a fine of ₹500 per week. Please use the online payment portal or visit the accounts office.</div>
+          <div class="notice-foot"><span class="notice-time">1 day ago</span><span class="pill yellow">Finance</span></div>
+        </div>
+      </div>
+      <div class="notice-card unread">
+        <div class="notice-icon" style="background:#a78bfa18;font-size:22px">🏠</div>
+        <div class="notice-body">
+          <div class="notice-title">Hostel Water Supply Maintenance — March 27</div>
+          <div class="notice-desc">There will be no water supply in Blocks A, B, and C hostel from 6 AM to 2 PM on March 27 due to scheduled maintenance. Students are advised to store water accordingly. Inconvenience is regretted.</div>
+          <div class="notice-foot"><span class="notice-time">1 day ago</span><span class="pill purple">Hostel</span></div>
+        </div>
+      </div>
+      <div class="notice-card">
+        <div class="notice-icon" style="background:#34d39918;font-size:22px">🏆</div>
+        <div class="notice-body">
+          <div class="notice-title">Annual Hackathon 2024 — Registrations Open</div>
+          <div class="notice-desc">The Computer Science Department is proud to announce the Annual Hackathon 2024. Form teams of 3-4 students and register before March 28. Winners get internship opportunities at top tech companies. Theme: AI for Social Good.</div>
+          <div class="notice-foot"><span class="notice-time">3 days ago</span><span class="pill green">Event</span></div>
+        </div>
+      </div>
+      <div class="notice-card">
+        <div class="notice-icon" style="background:#f8717118;font-size:22px">🚨</div>
+        <div class="notice-body">
+          <div class="notice-title">Sports Day — April 5: Mandatory Participation</div>
+          <div class="notice-desc">All students must participate in Sports Day events on April 5. Attendance will be marked. Register for at least one event with your class coordinator by April 2. Day scholars must report by 9 AM.</div>
+          <div class="notice-foot"><span class="notice-time">5 days ago</span><span class="pill red">Event</span></div>
+        </div>
+      </div>
+      <div class="notice-card">
+        <div class="notice-icon" style="background:#5b8fff18;font-size:22px">📚</div>
+        <div class="notice-body">
+          <div class="notice-title">Library Extended Hours — Exam Season</div>
+          <div class="notice-desc">The central library will be open 24/7 from April 1 to April 30 during exam season. Study rooms must be booked in advance through the library portal. Night access requires student ID card swipe.</div>
+          <div class="notice-foot"><span class="notice-time">6 days ago</span><span class="pill blue">Academic</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ASSIGNMENTS ══════════════ -->
+  <div class="page" id="page-assignments">
+    <div class="section-head"><div><div class="section-title">Assignments</div><div class="section-sub">Submit and track your academic submissions</div></div><button class="btn btn-primary" onclick="openModal('newAssignModal')">+ New Submission</button></div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">All</button>
+      <button class="tab" onclick="setTab(this)">Pending</button>
+      <button class="tab" onclick="setTab(this)">Submitted</button>
+      <button class="tab" onclick="setTab(this)">Graded</button>
+    </div>
+    <div class="grid-auto">
+      <div class="asgn-card">
+        <div class="asgn-head">
+          <div><div class="asgn-title">ML Model Implementation — Linear Regression</div><div class="asgn-course">Machine Learning · CS-601</div></div>
+          <span class="pill red">Due Today</span>
+        </div>
+        <div class="asgn-progress">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px"><span>Progress</span><span>80%</span></div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div>
+        </div>
+        <div class="asgn-foot">
+          <button class="btn btn-primary btn-sm" onclick="openModal('submitModal')">📤 Submit Now</button>
+          <button class="btn btn-secondary btn-sm">📎 View Brief</button>
+        </div>
+      </div>
+      <div class="asgn-card">
+        <div class="asgn-head">
+          <div><div class="asgn-title">Network Topology Design Report</div><div class="asgn-course">Computer Networks · CS-603</div></div>
+          <span class="pill yellow">Due in 3 days</span>
+        </div>
+        <div class="asgn-progress">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px"><span>Progress</span><span>40%</span></div>
+          <div class="progress-bar"><div class="progress-fill yellow" style="width:40%"></div></div>
+        </div>
+        <div class="asgn-foot">
+          <button class="btn btn-secondary btn-sm" onclick="openModal('submitModal')">📤 Submit</button>
+          <button class="btn btn-secondary btn-sm">📎 View Brief</button>
+        </div>
+      </div>
+      <div class="asgn-card">
+        <div class="asgn-head">
+          <div><div class="asgn-title">OS Scheduling Algorithm Simulation</div><div class="asgn-course">Operating Systems · CS-602</div></div>
+          <span class="pill green">Submitted</span>
+        </div>
+        <div class="asgn-progress">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px"><span>Submitted on Mar 20</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+        </div>
+        <div class="asgn-foot">
+          <button class="btn btn-secondary btn-sm">👁 View Submission</button>
+        </div>
+      </div>
+      <div class="asgn-card">
+        <div class="asgn-head">
+          <div><div class="asgn-title">Database Normalization Exercise</div><div class="asgn-course">DBMS · CS-604</div></div>
+          <span class="pill blue">Graded: 47/50</span>
+        </div>
+        <div class="asgn-progress">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px"><span>Grade</span><span>94%</span></div>
+          <div class="progress-bar"><div class="progress-fill blue" style="width:94%"></div></div>
+        </div>
+        <div class="asgn-foot">
+          <button class="btn btn-secondary btn-sm">📋 View Feedback</button>
+        </div>
+      </div>
+      <div class="asgn-card">
+        <div class="asgn-head">
+          <div><div class="asgn-title">Software Testing — Unit Test Cases</div><div class="asgn-course">Software Engineering · CS-605</div></div>
+          <span class="pill blue">Graded: 38/40</span>
+        </div>
+        <div class="asgn-progress">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px"><span>Grade</span><span>95%</span></div>
+          <div class="progress-bar"><div class="progress-fill green" style="width:95%"></div></div>
+        </div>
+        <div class="asgn-foot">
+          <button class="btn btn-secondary btn-sm">📋 View Feedback</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DISPENSARY ══════════════ -->
+  <div class="page" id="page-dispensary">
+    <div class="section-head"><div><div class="section-title">Dispensary</div><div class="section-sub">Campus health services and medical support</div></div><button class="btn btn-primary" onclick="openModal('apptModal')">+ Book Appointment</button></div>
+    <div class="grid-2" style="margin-bottom:28px">
+      <div class="card" style="background:linear-gradient(135deg,#1a2040,#1c2850);border-color:#3a4a80">
+        <div class="card-title">🏥 Campus Dispensary</div>
+        <div class="card-sub">Block A, Ground Floor</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">Weekdays</span><span>8:00 AM – 8:00 PM</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">Weekends</span><span>9:00 AM – 5:00 PM</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">Emergency</span><span style="color:var(--accent5);font-weight:700">24/7</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--text2)">Helpline</span><span style="font-family:var(--font-mono)">+91 98765 43210</span></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <span class="pill green">Open Now</span>
+          <span class="pill gray">Dr. Meena available</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">💊 Medical History</div>
+        <div class="card-sub">Recent visits and prescriptions</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);font-size:12px;color:var(--accent3)">💊</div>
+            <div class="tl-content"><div class="tl-title">Routine Checkup + Prescription</div><div class="tl-meta">Mar 10, 2024 · Dr. Meena Pillai · Paracetamol 500mg</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);font-size:12px;color:var(--accent4)">🩺</div>
+            <div class="tl-content"><div class="tl-title">Fever & Cold Treatment</div><div class="tl-meta">Feb 22, 2024 · Dr. Suresh Kumar · Cetirizine + Cough Syrup</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#5b8fff18;border-color:var(--accent);font-size:12px;color:var(--accent)">🔬</div>
+            <div class="tl-content"><div class="tl-title">Blood Test Referred</div><div class="tl-meta">Jan 15, 2024 · Dr. Meena Pillai · CBC test at City Lab</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-head"><div class="section-title">Upcoming Appointments</div></div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="appt-card">
+        <div class="appt-date-box"><div class="appt-day">28</div><div class="appt-month">Mar</div></div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">General Checkup</div>
+          <div style="font-size:12px;color:var(--text2)">Dr. Meena Pillai · 10:30 AM · Room 3</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="pill green">Confirmed</span>
+          <button class="btn btn-danger btn-xs">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:20px">
+      <div class="section-head"><div class="section-title">Available Doctors</div></div>
+      <div class="grid-2">
+        <div class="faculty-card">
+          <div class="faculty-avatar" style="background:linear-gradient(135deg,#34d399,#059669)">MP</div>
+          <div class="faculty-info">
+            <div class="faculty-name">Dr. Meena Pillai</div>
+            <div class="faculty-dept">General Physician · MBBS, MD</div>
+            <div class="faculty-actions"><span class="pill green">Available Today</span><button class="btn btn-primary btn-xs" onclick="openModal('apptModal')">Book</button></div>
+          </div>
+        </div>
+        <div class="faculty-card">
+          <div class="faculty-avatar" style="background:linear-gradient(135deg,#5b8fff,#a78bfa)">SK</div>
+          <div class="faculty-info">
+            <div class="faculty-name">Dr. Suresh Kumar</div>
+            <div class="faculty-dept">Dentist · BDS, MDS</div>
+            <div class="faculty-actions"><span class="pill yellow">Tue & Thu</span><button class="btn btn-primary btn-xs" onclick="openModal('apptModal')">Book</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LIBRARY ══════════════ -->
+  <div class="page" id="page-library">
+    <div class="section-head"><div><div class="section-title">Library</div><div class="section-sub">Browse, borrow and return books</div></div><button class="btn btn-primary" onclick="showToast('Library card QR generated','success')">📲 My Library Card</button></div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon blue">📚</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">Books Issued</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⏳</div><div class="stat-info"><div class="stat-val">5</div><div class="stat-label">Days Left</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">₹0</div><div class="stat-label">Fine Pending</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">🔖</div><div class="stat-info"><div class="stat-val">12</div><div class="stat-label">Wishlist</div></div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">Browse</button>
+      <button class="tab" onclick="setTab(this)">My Issued Books</button>
+      <button class="tab" onclick="setTab(this)">E-Resources</button>
+      <button class="tab" onclick="setTab(this)">Book Seat</button>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:20px">
+      <div class="topbar-search" style="flex:1;border-radius:var(--radius-sm);padding:10px 16px;width:auto">
+        <span style="color:var(--text3)">🔍</span>
+        <input type="text" placeholder="Search by title, author, ISBN…" style="border:none;background:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%">
+      </div>
+      <select class="form-control" style="width:180px">
+        <option>All Categories</option>
+        <option>Computer Science</option>
+        <option>Mathematics</option>
+        <option>Physics</option>
+        <option>Reference</option>
+      </select>
+    </div>
+    <div class="grid-4">
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22)">📘</div>
+        <div class="book-info"><div class="book-title">Introduction to Algorithms</div><div class="book-author">Cormen, Leiserson et al.</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill green">Available</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#34d39922,#059669)">🌐</div>
+        <div class="book-info"><div class="book-title">Computer Networks</div><div class="book-author">Andrew S. Tanenbaum</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill green">Available</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#f59e0b22,#d9770622)">🤖</div>
+        <div class="book-info"><div class="book-title">Artificial Intelligence</div><div class="book-author">Stuart Russell, Peter Norvig</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill red">Issued</span><button class="btn btn-secondary btn-xs">Waitlist</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#f8717122,#b91c1c22)">🗄</div>
+        <div class="book-info"><div class="book-title">Database System Concepts</div><div class="book-author">Silberschatz, Korth, Sudarshan</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill green">Available</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#a78bfa22,#7c3aed22)">💻</div>
+        <div class="book-info"><div class="book-title">Operating System Concepts</div><div class="book-author">Silberschatz, Galvin, Gagne</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill green">Available</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#34d39922,#5b8fff22)">🧮</div>
+        <div class="book-info"><div class="book-title">Discrete Mathematics</div><div class="book-author">Kenneth H. Rosen</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill yellow">2 left</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#5b8fff22,#34d39922)">🔒</div>
+        <div class="book-info"><div class="book-title">Computer Security: Art and Science</div><div class="book-author">Matt Bishop</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill green">Available</span><button class="btn btn-primary btn-xs" onclick="showToast('Book reserved successfully!','success')">Reserve</button></div></div>
+      </div>
+      <div class="book-card">
+        <div class="book-cover" style="background:linear-gradient(135deg,#f59e0b22,#a78bfa22)">📊</div>
+        <div class="book-info"><div class="book-title">Machine Learning: A Probabilistic Perspective</div><div class="book-author">Kevin P. Murphy</div><div style="display:flex;justify-content:space-between;align-items:center"><span class="pill red">Issued</span><button class="btn btn-secondary btn-xs">Waitlist</button></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TECH HELP ══════════════ -->
+  <div class="page" id="page-tech-help">
+    <div class="section-head"><div><div class="section-title">Technical Help</div><div class="section-sub">Raise, track and resolve technical issues</div></div><button class="btn btn-primary" onclick="openModal('ticketModal')">+ Raise Ticket</button></div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon red">🔴</div><div class="stat-info"><div class="stat-val">1</div><div class="stat-label">Open Tickets</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">🟡</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">In Progress</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">7</div><div class="stat-label">Resolved</div></div></div>
+      <div class="stat-card"><div class="stat-icon blue">⭐</div><div class="stat-info"><div class="stat-val">4.6</div><div class="stat-label">Avg Rating</div></div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">All Tickets</button>
+      <button class="tab" onclick="setTab(this)">Network Issues</button>
+      <button class="tab" onclick="setTab(this)">Software</button>
+      <button class="tab" onclick="setTab(this)">Hardware</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="ticket-card">
+        <div class="ticket-head">
+          <div><div class="ticket-id">#TKT-2024-0048</div><div class="ticket-title">WiFi connectivity issue in Room 204, Block C</div></div>
+          <span class="pill red">Open</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">The WiFi signal in my room is extremely weak. I'm unable to attend online classes and download study material. Issue persists for 3 days.</div>
+        <div class="ticket-foot">
+          <span class="ticket-time">Raised: Mar 23, 2024</span>
+          <span class="pill gray">Network</span>
+          <span class="pill red">High Priority</span>
+          <button class="btn btn-secondary btn-xs">View Thread</button>
+        </div>
+      </div>
+      <div class="ticket-card">
+        <div class="ticket-head">
+          <div><div class="ticket-id">#TKT-2024-0039</div><div class="ticket-title">Lab computer #12 not booting — Lab 2</div></div>
+          <span class="pill yellow">In Progress</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">System shows black screen after POST. Hard drive might be faulty. Assigned to IT team.</div>
+        <div class="ticket-foot">
+          <span class="ticket-time">Raised: Mar 18, 2024</span>
+          <span class="pill gray">Hardware</span>
+          <button class="btn btn-secondary btn-xs">View Thread</button>
+        </div>
+      </div>
+      <div class="ticket-card" style="opacity:.75">
+        <div class="ticket-head">
+          <div><div class="ticket-id">#TKT-2024-0031</div><div class="ticket-title">Cannot access LMS portal — login loop</div></div>
+          <span class="pill green">Resolved</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">LMS password reset issue resolved. Browser cache was causing redirect loop. Fixed on Mar 15.</div>
+        <div class="ticket-foot">
+          <span class="ticket-time">Resolved: Mar 15, 2024</span>
+          <span class="pill gray">Software</span>
+          <span class="pill green">⭐ Rated 5</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px;padding:20px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)">
+      <div class="section-title" style="font-size:15px;margin-bottom:14px">💡 Self-Service Knowledge Base</div>
+      <div class="grid-2">
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">📶 How to connect to campus WiFi</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">🔑 Reset LMS / Portal password</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">🖨 Printer setup instructions</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">💻 VPN access for remote learning</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ FACULTY INFO ══════════════ -->
+  <div class="page" id="page-faculty">
+    <div class="section-head"><div><div class="section-title">Faculty Information</div><div class="section-sub">Contact and schedule for your semester</div></div></div>
+    <div class="topbar-search" style="margin-bottom:20px;border-radius:var(--radius-sm);padding:10px 16px;background:var(--surface);border:1px solid var(--border)">
+      <span style="color:var(--text3)">🔍</span>
+      <input type="text" placeholder="Search faculty by name or department…" style="border:none;background:none;color:var(--text);font-family:var(--font);font-size:13px;outline:none;width:100%">
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#5b8fff,#a78bfa)">PS</div>
+        <div class="faculty-info">
+          <div class="faculty-name">Dr. Priya Sharma</div>
+          <div class="faculty-dept">Data Structures & Algorithms · CS-601 · PhD (IIT Delhi)</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Office: Room 401, CS Block · Hours: Mon–Fri 11AM–1PM</div>
+          <div class="faculty-actions">
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Opening email client…','info')">✉️ Email</button>
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Schedule fetched','info')">📅 Schedule</button>
+            <span class="pill green">Available</span>
+          </div>
+        </div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#34d399,#059669)">AM</div>
+        <div class="faculty-info">
+          <div class="faculty-name">Prof. Anand Mehta</div>
+          <div class="faculty-dept">Operating Systems · CS-602 · MTech (NIT Trichy)</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Office: Room 308, CS Block · Hours: Mon, Wed, Fri 2PM–4PM</div>
+          <div class="faculty-actions">
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Opening email client…','info')">✉️ Email</button>
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Schedule fetched','info')">📅 Schedule</button>
+            <span class="pill yellow">Busy till 12 PM</span>
+          </div>
+        </div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#f59e0b,#d97706)">RP</div>
+        <div class="faculty-info">
+          <div class="faculty-name">Dr. Rajan Patel</div>
+          <div class="faculty-dept">Computer Networks · CS-603 · PhD (IIT Bombay)</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Office: Room 215, CS Block · Hours: Tue, Thu 10AM–12PM</div>
+          <div class="faculty-actions">
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Opening email client…','info')">✉️ Email</button>
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Schedule fetched','info')">📅 Schedule</button>
+            <span class="pill red">On Leave</span>
+          </div>
+        </div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">NK</div>
+        <div class="faculty-info">
+          <div class="faculty-name">Dr. Neha Kapoor</div>
+          <div class="faculty-dept">DBMS · CS-604 · PhD (BITS Pilani)</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Office: Room 112, CS Block · Hours: Mon–Thu 3PM–5PM</div>
+          <div class="faculty-actions">
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Opening email client…','info')">✉️ Email</button>
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Schedule fetched','info')">📅 Schedule</button>
+            <span class="pill green">Available</span>
+          </div>
+        </div>
+      </div>
+      <div class="faculty-card">
+        <div class="faculty-avatar" style="background:linear-gradient(135deg,#f87171,#b91c1c)">VR</div>
+        <div class="faculty-info">
+          <div class="faculty-name">Prof. Vikram Rao</div>
+          <div class="faculty-dept">Machine Learning · CS-601-ML · MTech + MBA</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Office: Room 509, AI Lab · Hours: Wed, Fri 9AM–11AM</div>
+          <div class="faculty-actions">
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Opening email client…','info')">✉️ Email</button>
+            <button class="btn btn-secondary btn-xs" onclick="showToast('Schedule fetched','info')">📅 Schedule</button>
+            <span class="pill green">Available</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ FEES ══════════════ -->
+  <div class="page" id="page-fees">
+    <div class="section-head"><div><div class="section-title">Fees & Payments</div><div class="section-sub">Semester fee structure and payment history</div></div><button class="btn btn-primary" onclick="openModal('payModal')">💳 Pay Now</button></div>
+    <div class="alert warn" style="margin-bottom:20px">⚠️ <span>Payment deadline is <strong>March 31, 2024</strong>. Late payment attracts ₹500/week penalty.</span></div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">📋 Semester 6 Fee Breakup</div>
+        <div class="card-sub">Academic Year 2023–24</div>
+        <div class="fee-item"><div class="fee-name">Tuition Fee</div><div class="fee-amount">₹45,000</div></div>
+        <div class="fee-item"><div class="fee-name">Development Fee</div><div class="fee-amount">₹8,000</div></div>
+        <div class="fee-item"><div class="fee-name">Library Fee</div><div class="fee-amount">₹2,000</div></div>
+        <div class="fee-item"><div class="fee-name">Lab Fee</div><div class="fee-amount">₹5,000</div></div>
+        <div class="fee-item"><div class="fee-name">Exam Fee</div><div class="fee-amount">₹1,500</div></div>
+        <div class="fee-item" id="hostelFeeRow"><div class="fee-name">Hostel Fee (6 months)</div><div class="fee-amount">₹18,000</div></div>
+        <div class="fee-item" id="messFeeRow"><div class="fee-name">Mess Fee (6 months)</div><div class="fee-amount">₹12,000</div></div>
+        <div style="border-top:2px solid var(--border);margin-top:10px;padding-top:16px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:14px;font-weight:700">Total Due</span>
+          <div class="fee-total" id="totalFee">₹91,500</div>
+        </div>
+        <div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--text2)">Already Paid</span>
+          <span style="font-family:var(--font-mono);font-size:14px;color:var(--accent3);font-weight:700">₹45,000</span>
+        </div>
+        <div class="progress-bar" style="margin-top:10px"><div class="progress-fill blue" style="width:49%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-top:5px"><span>49% paid</span><span>Balance: ₹46,500</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🧾 Payment History</div>
+        <div class="card-sub">Last 6 transactions</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">✓</div>
+            <div class="tl-content"><div class="tl-title">Tuition Fee – Semester 5</div><div class="tl-meta">Oct 01, 2023 · ₹45,000 · Online · Ref #TXN9823</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">✓</div>
+            <div class="tl-content"><div class="tl-title">Hostel Fee – Sem 5 (Part payment)</div><div class="tl-meta">Oct 05, 2023 · ₹18,000 · UPI · Ref #TXN9891</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">✓</div>
+            <div class="tl-content"><div class="tl-title">Fine Payment</div><div class="tl-meta">Nov 12, 2023 · ₹500 · Cash · Library fine</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#5b8fff18;border-color:var(--accent);color:var(--accent);font-size:12px">↩</div>
+            <div class="tl-content"><div class="tl-title">Sem 6 Part Payment Received</div><div class="tl-meta">Mar 01, 2024 · ₹45,000 · Online · Ref #TXN1243</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ MESS ══════════════ -->
+  <div class="page" id="page-mess">
+    <div class="section-head"><div><div class="section-title">Mess & Food</div><div class="section-sub">Weekly menu and meal management</div></div><div style="display:flex;gap:8px"><button class="btn btn-secondary btn-sm" onclick="showToast('Feedback submitted!','success')">💬 Give Feedback</button><button class="btn btn-primary btn-sm" onclick="showToast('Meal opted out for tomorrow','info')">🚫 Opt Out Tomorrow</button></div></div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon green">🍽</div><div class="stat-info"><div class="stat-val">23</div><div class="stat-label">Meals Remaining</div></div></div>
+      <div class="stat-card"><div class="stat-icon blue">⭐</div><div class="stat-info"><div class="stat-val">3.8</div><div class="stat-label">Avg Rating</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">🌱</div><div class="stat-info"><div class="stat-val">Veg</div><div class="stat-label">Menu Type</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">💰</div><div class="stat-info"><div class="stat-val">₹67</div><div class="stat-label">Cost per Meal</div></div></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#1a2040,#1c2850);border-color:#3a4a80">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="card-title">📅 Today — Wednesday, March 25</div>
+        <span class="pill green">Mess Open Now</span>
+      </div>
+    </div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="meal-card">
+        <div class="meal-header"><div class="meal-type">🌅 Breakfast</div><div class="meal-time">7:30 – 9:00 AM</div></div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-dot"></div>Idli Sambar</div>
+          <div class="meal-item"><div class="meal-dot"></div>Coconut Chutney</div>
+          <div class="meal-item"><div class="meal-dot"></div>Bread + Butter</div>
+          <div class="meal-item"><div class="meal-dot"></div>Boiled Egg (optional)</div>
+          <div class="meal-item"><div class="meal-dot"></div>Tea / Coffee / Milk</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-header"><div class="meal-type">☀️ Lunch</div><div class="meal-time">12:30 – 2:00 PM</div></div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-dot"></div>Dal Makhani</div>
+          <div class="meal-item"><div class="meal-dot"></div>Jeera Rice</div>
+          <div class="meal-item"><div class="meal-dot"></div>Roti (3 pcs)</div>
+          <div class="meal-item"><div class="meal-dot"></div>Mix Veg Sabzi</div>
+          <div class="meal-item"><div class="meal-dot"></div>Salad + Raita</div>
+          <div class="meal-item"><div class="meal-dot"></div>Gulab Jamun</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-header"><div class="meal-type">🌤 Snacks</div><div class="meal-time">4:30 – 5:30 PM</div></div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-dot"></div>Samosa (2 pcs)</div>
+          <div class="meal-item"><div class="meal-dot"></div>Green Chutney</div>
+          <div class="meal-item"><div class="meal-dot"></div>Tea / Juice</div>
+          <div class="meal-item"><div class="meal-dot" style="background:var(--accent4)"></div>Seasonal Fruit</div>
+        </div>
+      </div>
+      <div class="meal-card">
+        <div class="meal-header"><div class="meal-type">🌙 Dinner</div><div class="meal-time">7:00 – 9:00 PM</div></div>
+        <div class="meal-body">
+          <div class="meal-item"><div class="meal-dot"></div>Paneer Butter Masala</div>
+          <div class="meal-item"><div class="meal-dot"></div>Fried Rice / Pulao</div>
+          <div class="meal-item"><div class="meal-dot"></div>Roti (3 pcs)</div>
+          <div class="meal-item"><div class="meal-dot"></div>Papad + Pickle</div>
+          <div class="meal-item"><div class="meal-dot"></div>Ice Cream (Wed special)</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-bottom:14px">📆 Weekly Menu Overview</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Day</th><th>Breakfast</th><th>Lunch</th><th>Dinner</th><th>Special</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mon</strong></td><td>Poha + Tea</td><td>Rajma Rice + Roti</td><td>Chole Bhature</td><td>—</td></tr>
+          <tr><td><strong>Tue</strong></td><td>Upma + Juice</td><td>Dal Fry + Rice</td><td>Aloo Paratha + Curd</td><td>—</td></tr>
+          <tr><td><strong>Wed</strong> 📍</td><td>Idli Sambar</td><td>Dal Makhani + Rice</td><td>Paneer Masala</td><td>Ice Cream</td></tr>
+          <tr><td><strong>Thu</strong></td><td>Bread Omelette</td><td>Sambar Rice</td><td>Mixed Veg Pulao</td><td>—</td></tr>
+          <tr><td><strong>Fri</strong></td><td>Puri Bhaji</td><td>Kadhi Pakora + Rice</td><td>Biryani</td><td>Kheer</td></tr>
+          <tr><td><strong>Sat</strong></td><td>Paratha + Pickle</td><td>Palak Paneer + Naan</td><td>Dosa + Chutney</td><td>Halwa</td></tr>
+          <tr><td><strong>Sun</strong></td><td>Chhole Puri</td><td>Special Thali</td><td>Pasta / Noodles</td><td>Brownie</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ HOSTEL ══════════════ -->
+  <div class="page" id="page-hostel">
+    <div class="section-head"><div><div class="section-title">My Hostel Room</div><div class="section-sub">Room details, roommates and requests</div></div><button class="btn btn-primary" onclick="openModal('complaintModal')">📋 Raise Complaint</button></div>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="room-info-card">
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Room Information</div>
+        <div style="font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:4px">Room 204</div>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:16px">Block C · Boys Hostel · 2nd Floor</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">BLOCK</div><div style="font-weight:600">C — Saraswati Block</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">TYPE</div><div style="font-weight:600">Double Sharing</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">WARDEN</div><div style="font-weight:600">Mr. Suresh Nair</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ALLOTTED</div><div style="font-weight:600">July 2021</div></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <span class="pill green">Active Resident</span>
+          <span class="pill blue">Sem 6</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">👥 Roommate</div>
+        <div class="card-sub">Current roommate details</div>
+        <div class="faculty-card" style="background:var(--surface2);margin-bottom:16px;padding:16px">
+          <div class="faculty-avatar" style="background:linear-gradient(135deg,#f87171,#b91c1c);width:50px;height:50px;font-size:18px">AK</div>
+          <div class="faculty-info">
+            <div class="faculty-name">Arjun Kapoor</div>
+            <div class="faculty-dept">CS-2021-0856 · 6th Semester</div>
+            <div style="font-size:11px;color:var(--text2)">📱 +91 98xxx xxxxx (Ask admin)</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" style="width:100%" onclick="showToast('Roommate change request submitted','info')">🔄 Request Room Change</button>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">🔧 Maintenance Requests</div>
+        <div class="card-sub">Open complaints</div>
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4);font-size:12px">🔨</div>
+            <div class="tl-content"><div class="tl-title">Broken cupboard handle</div><div class="tl-meta">Submitted Mar 20 · In Progress</div></div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">✓</div>
+            <div class="tl-content"><div class="tl-title">Ceiling fan replacement</div><div class="tl-meta">Resolved Mar 10</div></div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:8px" onclick="openModal('complaintModal')">+ New Complaint</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Rules & Guidelines</div>
+        <div class="card-sub">Important hostel policies</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🕙</span><span>Curfew: 10:00 PM (weekdays), 11:00 PM (weekends)</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🚪</span><span>Visitors allowed only in common area till 8 PM</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🍳</span><span>No cooking in rooms — use common kitchen</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>📴</span><span>Generator hours: 10 PM – 6 AM, 2 hrs only</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🚿</span><span>Hot water: 5 AM – 9 AM, 5 PM – 8 PM</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📞 Emergency Contacts</div>
+        <div class="card-sub">Hostel administration</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Warden</div><div style="font-size:11px;color:var(--text2)">Mr. Suresh Nair</div></div><div style="font-family:var(--font-mono);font-size:12px">98765-11122</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Chief Warden</div><div style="font-size:11px;color:var(--text2)">Dr. V. Iyer</div></div><div style="font-family:var(--font-mono);font-size:12px">98765-11100</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Security</div><div style="font-size:11px;color:var(--text2)">24/7 Helpline</div></div><div style="font-family:var(--font-mono);font-size:12px">1800-xxx-xxxx</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ ATTENDANCE ══════════════ -->
+  <div class="page" id="page-attendance">
+    <div class="section-head"><div><div class="section-title">Attendance Overview</div><div class="section-sub">Keep minimum 75% attendance to be eligible for exams</div></div></div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon blue">📊</div><div class="stat-info"><div class="stat-val">78%</div><div class="stat-label">Overall Attendance</div><div class="stat-trend up">Above minimum</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">89</div><div class="stat-label">Classes Attended</div></div></div>
+      <div class="stat-card"><div class="stat-icon red">❌</div><div class="stat-info"><div class="stat-val">25</div><div class="stat-label">Classes Missed</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⚠️</div><div class="stat-info"><div class="stat-val">1</div><div class="stat-label">At Risk Subject</div></div></div>
+    </div>
+    <div class="alert warn" style="margin-bottom:24px">⚠️ <span>Computer Networks attendance is at <strong>68%</strong>. You need to attend the next <strong>8 consecutive classes</strong> to reach 75%.</span></div>
+    <div class="section-title" style="margin-bottom:16px">Subject-wise Attendance</div>
+    <div class="attendance-grid" style="margin-bottom:28px">
+      <div class="att-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle class="ring-bg" cx="45" cy="45" r="38"/>
+            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#5b8fff" stroke-dasharray="238.76" stroke-dashoffset="52.5" id="r1"/>
+          </svg>
+          <div class="ring-label">78%<div class="ring-pct">overall</div></div>
+        </div>
+        <div class="att-subject">Data Structures</div>
+        <div class="att-counts">35/45 classes</div>
+        <div style="margin-top:8px"><span class="pill green">Safe</span></div>
+      </div>
+      <div class="att-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle class="ring-bg" cx="45" cy="45" r="38"/>
+            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#34d399" stroke-dasharray="238.76" stroke-dashoffset="33" id="r2"/>
+          </svg>
+          <div class="ring-label">86%<div class="ring-pct">attendance</div></div>
+        </div>
+        <div class="att-subject">Operating Systems</div>
+        <div class="att-counts">24/28 classes</div>
+        <div style="margin-top:8px"><span class="pill green">Safe</span></div>
+      </div>
+      <div class="att-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle class="ring-bg" cx="45" cy="45" r="38"/>
+            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#f87171" stroke-dasharray="238.76" stroke-dashoffset="76.5" id="r3"/>
+          </svg>
+          <div class="ring-label" style="color:var(--accent5)">68%<div class="ring-pct">attendance</div></div>
+        </div>
+        <div class="att-subject">Computer Networks</div>
+        <div class="att-counts">17/25 classes</div>
+        <div style="margin-top:8px"><span class="pill red">At Risk</span></div>
+      </div>
+      <div class="att-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle class="ring-bg" cx="45" cy="45" r="38"/>
+            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#a78bfa" stroke-dasharray="238.76" stroke-dashoffset="28.7" id="r4"/>
+          </svg>
+          <div class="ring-label">88%<div class="ring-pct">attendance</div></div>
+        </div>
+        <div class="att-subject">DBMS</div>
+        <div class="att-counts">22/25 classes</div>
+        <div style="margin-top:8px"><span class="pill green">Safe</span></div>
+      </div>
+      <div class="att-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 90 90" width="90" height="90">
+            <circle class="ring-bg" cx="45" cy="45" r="38"/>
+            <circle class="ring-fill" cx="45" cy="45" r="38" stroke="#f59e0b" stroke-dasharray="238.76" stroke-dashoffset="47.75" id="r5"/>
+          </svg>
+          <div class="ring-label">80%<div class="ring-pct">attendance</div></div>
+        </div>
+        <div class="att-subject">Machine Learning</div>
+        <div class="att-counts">20/25 classes</div>
+        <div style="margin-top:8px"><span class="pill green">Safe</span></div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-bottom:14px">📅 March Attendance Calendar</div>
+    <div class="card">
+      <div class="cal-grid">
+        <div class="cal-day-hdr">Sun</div><div class="cal-day-hdr">Mon</div><div class="cal-day-hdr">Tue</div><div class="cal-day-hdr">Wed</div><div class="cal-day-hdr">Thu</div><div class="cal-day-hdr">Fri</div><div class="cal-day-hdr">Sat</div>
+        <div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day other-month">29</div><div class="cal-day other-month">1</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">2</div><div class="cal-day">3</div>
+        <div class="cal-day">4</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">5</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">6</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">7</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">8</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">9</div><div class="cal-day">10</div>
+        <div class="cal-day">11</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">12</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">13</div><div class="cal-day has-event" style="background:#f8717118;color:var(--accent5)">14</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">15</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">16</div><div class="cal-day">17</div>
+        <div class="cal-day">18</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">19</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">20</div><div class="cal-day has-event" style="background:#f8717118;color:var(--accent5)">21</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">22</div><div class="cal-day has-event" style="background:#34d39918;color:var(--accent3)">23</div><div class="cal-day">24</div>
+        <div class="cal-day today">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:12px">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#34d39918;border:1px solid var(--accent3);display:inline-block"></span>Present</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:#f8717118;border:1px solid var(--accent5);display:inline-block"></span>Absent</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:var(--accent);display:inline-block"></span>Today</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ RESULTS ══════════════ -->
+  <div class="page" id="page-results">
+    <div class="section-head"><div><div class="section-title">Semester Results</div><div class="section-sub">Academic performance and grade report</div></div><button class="btn btn-secondary btn-sm" onclick="showToast('Downloading transcript PDF…','info')">⬇️ Download Transcript</button></div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">Semester 5 (Latest)</button>
+      <button class="tab" onclick="setTab(this)">Semester 4</button>
+      <button class="tab" onclick="setTab(this)">Semester 3</button>
+      <button class="tab" onclick="setTab(this)">Semester 2</button>
+      <button class="tab" onclick="setTab(this)">Semester 1</button>
+    </div>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div class="card" style="background:linear-gradient(135deg,#1a2040,#1c2850);border-color:#3a4a80;text-align:center">
+        <div class="result-header" style="justify-content:center;flex-direction:column;gap:8px">
+          <div class="gpa-badge">
+            <div class="gpa-val">8.4</div>
+            <div class="gpa-label">SGPA · Semester 5</div>
+          </div>
+          <div style="margin-top:10px"><div style="font-size:13px;color:var(--text2)">Cumulative GPA</div><div style="font-family:var(--font-head);font-size:22px;font-weight:800">8.2 CGPA</div></div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:10px">
+          <span class="pill green">Distinction</span>
+          <span class="pill blue">Rank #12 / 120</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 CGPA Trend</div>
+        <div class="card-sub">Semester-wise performance</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Sem 1</span><span style="font-family:var(--font-mono);font-weight:700">7.8</span></div><div class="progress-bar"><div class="progress-fill blue" style="width:78%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Sem 2</span><span style="font-family:var(--font-mono);font-weight:700">8.0</span></div><div class="progress-bar"><div class="progress-fill blue" style="width:80%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Sem 3</span><span style="font-family:var(--font-mono);font-weight:700">7.9</span></div><div class="progress-bar"><div class="progress-fill blue" style="width:79%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Sem 4</span><span style="font-family:var(--font-mono);font-weight:700">8.1</span></div><div class="progress-bar"><div class="progress-fill blue" style="width:81%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span>Sem 5 (Latest)</span><span style="font-family:var(--font-mono);font-weight:700;color:var(--accent3)">8.4 ↑</span></div><div class="progress-bar"><div class="progress-fill green" style="width:84%"></div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Subject Code</th><th>Subject Name</th><th>Credits</th><th>Internal (40)</th><th>External (60)</th><th>Total (100)</th><th>Grade</th><th>Grade Point</th></tr></thead>
+        <tbody>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-501</span></td><td>Theory of Computation</td><td>4</td><td>36</td><td>52</td><td><strong>88</strong></td><td><span class="pill green">O</span></td><td style="font-family:var(--font-mono);font-weight:700">10</td></tr>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-502</span></td><td>Compiler Design</td><td>4</td><td>32</td><td>48</td><td><strong>80</strong></td><td><span class="pill blue">A+</span></td><td style="font-family:var(--font-mono);font-weight:700">9</td></tr>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-503</span></td><td>Artificial Intelligence</td><td>3</td><td>35</td><td>50</td><td><strong>85</strong></td><td><span class="pill green">O</span></td><td style="font-family:var(--font-mono);font-weight:700">10</td></tr>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-504</span></td><td>Computer Architecture</td><td>3</td><td>28</td><td>44</td><td><strong>72</strong></td><td><span class="pill purple">A</span></td><td style="font-family:var(--font-mono);font-weight:700">8</td></tr>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-505</span></td><td>Web Technologies</td><td>2</td><td>38</td><td>55</td><td><strong>93</strong></td><td><span class="pill green">O</span></td><td style="font-family:var(--font-mono);font-weight:700">10</td></tr>
+          <tr><td><span style="font-family:var(--font-mono);font-size:11px;color:var(--accent)">CS-506</span></td><td>AI Lab</td><td>2</td><td>36</td><td>—</td><td><strong>36/40</strong></td><td><span class="pill green">O</span></td><td style="font-family:var(--font-mono);font-weight:700">10</td></tr>
+          <tr style="background:var(--surface2)"><td colspan="2"><strong>Total</strong></td><td><strong>18</strong></td><td colspan="3"></td><td></td><td style="font-family:var(--font-mono);font-weight:800;color:var(--accent)">SGPA: 8.4</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══════════════ COURSES ══════════════ -->
+  <div class="page" id="page-courses">
+    <div class="section-head"><div><div class="section-title">Course Registration</div><div class="section-sub">Semester 6 — Registration open till March 30</div></div><button class="btn btn-primary" onclick="showToast('Registration saved!','success')">💾 Save Registration</button></div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-icon blue">📚</div><div class="stat-info"><div class="stat-val">5</div><div class="stat-label">Registered</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">18</div><div class="stat-label">Credits Enrolled</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⚠️</div><div class="stat-info"><div class="stat-val">22</div><div class="stat-label">Max Credits</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">📋</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">Electives Left</div></div></div>
+    </div>
+    <div class="alert info" style="margin-bottom:20px">📌 <span>You must register between 15–22 credits. Minimum 4 core subjects required.</span></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:700">Core Subjects — Semester 6</div>
+        <span class="pill blue">Required</span>
+      </div>
+      <div class="course-row" style="background:var(--surface2)"><th style="color:var(--text3);font-size:11px">Code</th><th style="color:var(--text3);font-size:11px">Subject</th><th style="color:var(--text3);font-size:11px">Credits</th><th style="color:var(--text3);font-size:11px">Status</th></div>
+      <div class="course-row"><div><div class="course-code">CS-601</div><div class="course-name">Data Structures & Algorithms</div><div class="course-meta">Dr. Priya Sharma · Mon/Wed/Fri 9-10 AM</div></div><span class="credit-badge">4C</span><span class="pill green">✓ Registered</span></div>
+      <div class="course-row"><div><div class="course-code">CS-602</div><div class="course-name">Operating Systems</div><div class="course-meta">Prof. Anand Mehta · Tue/Thu 10:30-12 AM</div></div><span class="credit-badge">4C</span><span class="pill green">✓ Registered</span></div>
+      <div class="course-row"><div><div class="course-code">CS-603</div><div class="course-name">Computer Networks</div><div class="course-meta">Dr. Rajan Patel · Mon/Wed 1:30-2:30 PM</div></div><span class="credit-badge">3C</span><span class="pill green">✓ Registered</span></div>
+      <div class="course-row"><div><div class="course-code">CS-604</div><div class="course-name">Database Management Systems</div><div class="course-meta">Dr. Neha Kapoor · Tue/Fri 2-3 PM</div></div><span class="credit-badge">3C</span><span class="pill green">✓ Registered</span></div>
+      <div style="padding:18px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:700">Elective Subjects</div>
+        <span class="pill yellow">Choose 2</span>
+      </div>
+      <div class="course-row"><div><div class="course-code">CS-E01</div><div class="course-name">Machine Learning</div><div class="course-meta">Prof. Vikram Rao · Mon/Wed 3-4:30 PM</div></div><span class="credit-badge">3C</span><span class="pill green">✓ Registered</span></div>
+      <div class="course-row"><div><div class="course-code">CS-E02</div><div class="course-name">Blockchain Technology</div><div class="course-meta">Dr. Kiran Shah · Tue/Thu 4-5 PM</div></div><span class="credit-badge">2C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+      <div class="course-row"><div><div class="course-code">CS-E03</div><div class="course-name">Cloud Computing</div><div class="course-meta">Prof. Arun Das · Fri 2-4 PM</div></div><span class="credit-badge">2C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+      <div class="course-row"><div><div class="course-code">CS-E04</div><div class="course-name">Cybersecurity Fundamentals</div><div class="course-meta">Dr. Seema Roy · Mon/Thu 5-6 PM</div></div><span class="credit-badge">3C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+    </div>
+  </div>
+
+  <!-- ══════════════ CALENDAR PAGE ══════════════ -->
+  <div class="page" id="page-calendar-page">
+    <div class="section-head"><div><div class="section-title">Academic Calendar</div><div class="section-sub">Semester 6 — Jan to May 2024</div></div></div>
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:20px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <button class="btn btn-secondary btn-sm">← Prev</button>
+            <div style="font-family:var(--font-head);font-size:16px;font-weight:800">March 2024</div>
+            <button class="btn btn-secondary btn-sm">Next →</button>
+          </div>
+          <div class="cal-grid">
+            <div class="cal-day-hdr">S</div><div class="cal-day-hdr">M</div><div class="cal-day-hdr">T</div><div class="cal-day-hdr">W</div><div class="cal-day-hdr">T</div><div class="cal-day-hdr">F</div><div class="cal-day-hdr">S</div>
+            <div class="cal-day other-month">25</div><div class="cal-day other-month">26</div><div class="cal-day other-month">27</div><div class="cal-day other-month">28</div><div class="cal-day other-month">29</div><div class="cal-day has-event">1</div><div class="cal-day">2</div>
+            <div class="cal-day">3</div><div class="cal-day has-event">4</div><div class="cal-day has-event">5</div><div class="cal-day has-event">6</div><div class="cal-day has-event">7</div><div class="cal-day has-event">8</div><div class="cal-day">9</div>
+            <div class="cal-day">10</div><div class="cal-day has-event">11</div><div class="cal-day has-event">12</div><div class="cal-day has-event">13</div><div class="cal-day has-event">14</div><div class="cal-day has-event">15</div><div class="cal-day">16</div>
+            <div class="cal-day">17</div><div class="cal-day has-event">18</div><div class="cal-day has-event">19</div><div class="cal-day has-event">20</div><div class="cal-day has-event">21</div><div class="cal-day has-event">22</div><div class="cal-day">23</div>
+            <div class="cal-day">24</div><div class="cal-day today has-event">25</div><div class="cal-day has-event">26</div><div class="cal-day has-event">27</div><div class="cal-day has-event">28</div><div class="cal-day has-event">29</div><div class="cal-day">30</div>
+            <div class="cal-day">31</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card-title" style="margin-bottom:14px">📌 Key Academic Dates</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot" style="background:#5b8fff18;border-color:var(--accent);color:var(--accent);font-size:12px">📘</div><div class="tl-content"><div class="tl-title">Semester 6 Classes Begin</div><div class="tl-meta">January 10, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4);font-size:12px">📝</div><div class="tl-content"><div class="tl-title">Internal Assessment I</div><div class="tl-meta">February 5–12, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#a78bfa18;border-color:var(--accent2);color:var(--accent2);font-size:12px">🎉</div><div class="tl-content"><div class="tl-title">Holi Break</div><div class="tl-meta">March 25–26, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4);font-size:12px">📝</div><div class="tl-content"><div class="tl-title">Internal Assessment II</div><div class="tl-meta">March 28 – April 4, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">🏆</div><div class="tl-content"><div class="tl-title">Annual Hackathon</div><div class="tl-meta">April 5–6, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#f8717118;border-color:var(--accent5);color:var(--accent5);font-size:12px">⚠️</div><div class="tl-content"><div class="tl-title">Last Working Day</div><div class="tl-meta">April 20, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#f8717118;border-color:var(--accent5);color:var(--accent5);font-size:12px">📋</div><div class="tl-content"><div class="tl-title">End Semester Exams</div><div class="tl-meta">April 26 – May 15, 2024</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#a78bfa18;border-color:var(--accent2);color:var(--accent2);font-size:12px">🎓</div><div class="tl-content"><div class="tl-title">Summer Vacation Begins</div><div class="tl-meta">May 20, 2024</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- end #main -->
+
+<!-- ─── MODALS ─────────────────────────────────────────────────────────── -->
+
+<!-- Submit Assignment -->
+<div class="modal-overlay" id="submitModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">📤 Submit Assignment</div><button class="modal-close" onclick="closeModal('submitModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Assignment</label><select class="form-control"><option>ML Model Implementation — CS-601</option><option>Network Topology Design — CS-603</option></select></div>
+      <div class="form-group"><label class="form-label">Comments / Notes</label><textarea class="form-control" placeholder="Add any comments for your faculty…"></textarea></div>
+      <div class="upload-zone" ondragover="this.classList.add('dragging');event.preventDefault()" ondragleave="this.classList.remove('dragging')" ondrop="this.classList.remove('dragging');event.preventDefault()">
+        <div style="font-size:28px;margin-bottom:8px">📁</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px">Drag & drop files here</div>
+        <div style="font-size:11px;color:var(--text2)">PDF, ZIP, DOC · Max 50MB</div>
+        <button class="btn btn-secondary btn-sm" style="margin-top:12px" onclick="showToast('File dialog opened…','info')">Browse Files</button>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('submitModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('submitModal');showToast('Assignment submitted successfully! ✅','success')">Submit</button></div>
+  </div>
+</div>
+
+<!-- Raise Ticket -->
+<div class="modal-overlay" id="ticketModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">🔧 Raise Tech Ticket</div><button class="modal-close" onclick="closeModal('ticketModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-control"><option>Network / WiFi</option><option>Software / LMS</option><option>Hardware</option><option>Email / Accounts</option><option>Printing</option><option>Other</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Location</label><input class="form-control" placeholder="Room/Lab number"></div>
+        <div class="form-group"><label class="form-label">Priority</label><select class="form-control"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Issue Title</label><input class="form-control" placeholder="Brief description of the issue"></div>
+      <div class="form-group"><label class="form-label">Detailed Description</label><textarea class="form-control" placeholder="Describe the issue in detail — when did it start, what you tried, etc."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('ticketModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('ticketModal');showToast('Ticket raised! Ticket ID: #TKT-2024-0049 📋','success')">Submit Ticket</button></div>
+  </div>
+</div>
+
+<!-- Book Appointment -->
+<div class="modal-overlay" id="apptModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">🏥 Book Appointment</div><button class="modal-close" onclick="closeModal('apptModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Doctor</label><select class="form-control"><option>Dr. Meena Pillai — General Physician</option><option>Dr. Suresh Kumar — Dentist</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Date</label><input class="form-control" type="date"></div>
+        <div class="form-group"><label class="form-label">Time Slot</label><select class="form-control"><option>9:00 AM</option><option>9:30 AM</option><option>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Symptoms / Reason</label><textarea class="form-control" placeholder="Briefly describe your symptoms or reason for visit…"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('apptModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('apptModal');showToast('Appointment booked! Check your schedule 📅','success')">Book Appointment</button></div>
+  </div>
+</div>
+
+<!-- Pay Fees -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">💳 Pay Fees</div><button class="modal-close" onclick="closeModal('payModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="alert info" style="margin-bottom:16px">ℹ️ <span>You are paying for <strong>Semester 6</strong> fees. Amount due: <strong>₹46,500</strong></span></div>
+      <div class="form-group"><label class="form-label">Payment Method</label>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div style="padding:12px;background:var(--surface2);border:2px solid var(--accent);border-radius:var(--radius-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:700">💳<br>Card</div>
+          <div style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:600" onclick="this.style.borderColor='var(--accent)'">📱<br>UPI</div>
+          <div style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);text-align:center;cursor:pointer;font-size:12px;font-weight:600" onclick="this.style.borderColor='var(--accent)'">🏦<br>Net Banking</div>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Card Number</label><input class="form-control" placeholder="1234 5678 9012 3456" style="font-family:var(--font-mono)"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Expiry</label><input class="form-control" placeholder="MM/YY"></div>
+        <div class="form-group"><label class="form-label">CVV</label><input class="form-control" placeholder="•••" type="password"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Amount</label><input class="form-control" value="₹46,500" style="font-family:var(--font-mono);font-weight:700;color:var(--accent3)"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('payModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('payModal');showToast('Payment of ₹46,500 successful! 🎉','success')">Pay ₹46,500</button></div>
+  </div>
+</div>
+
+<!-- Hostel Complaint -->
+<div class="modal-overlay" id="complaintModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">📋 Raise Hostel Complaint</div><button class="modal-close" onclick="closeModal('complaintModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-control"><option>Maintenance / Repair</option><option>Cleanliness</option><option>Electricity / Plumbing</option><option>Internet / WiFi</option><option>Security</option><option>Mess Complaint</option><option>Other</option></select></div>
+      <div class="form-group"><label class="form-label">Room Number</label><input class="form-control" value="Room 204, Block C" readonly></div>
+      <div class="form-group"><label class="form-label">Issue Title</label><input class="form-control" placeholder="Brief title of the complaint"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" placeholder="Describe the issue in detail…"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('complaintModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('complaintModal');showToast('Complaint submitted! Warden will contact you soon.','success')">Submit Complaint</button></div>
+  </div>
+</div>
+
+<!-- New Assignment Modal -->
+<div class="modal-overlay" id="newAssignModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">📝 Submit Assignment</div><button class="modal-close" onclick="closeModal('newAssignModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Select Subject</label><select class="form-control"><option>CS-601 — Data Structures</option><option>CS-602 — Operating Systems</option><option>CS-603 — Computer Networks</option><option>CS-604 — DBMS</option><option>CS-E01 — Machine Learning</option></select></div>
+      <div class="form-group"><label class="form-label">Assignment Title</label><input class="form-control" placeholder="Enter assignment title"></div>
+      <div class="form-group"><label class="form-label">Upload File</label>
+        <div class="upload-zone">
+          <div style="font-size:28px;margin-bottom:8px">📎</div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px">Click to upload or drag & drop</div>
+          <div style="font-size:11px;color:var(--text2)">PDF, DOCX, ZIP, RAR · Max 50MB</div>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">Notes for Faculty</label><textarea class="form-control" placeholder="Optional message to faculty…"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('newAssignModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('newAssignModal');showToast('Assignment submitted successfully! ✅','success')">Submit</button></div>
+  </div>
+</div>
+
+<!-- ─── TOAST CONTAINER ──────────────────────────────────────────────── -->
+<div id="toast-container"></div>
+
+<script>
+// ── NAVIGATION ────────────────────────────────────────────────────────
+const pageNames={dashboard:'Dashboard',notices:'Notices & Alerts',assignments:'Assignments',dispensary:'Dispensary',library:'Library','tech-help':'Technical Help',faculty:'Faculty Information',fees:'Fees & Payments',mess:'Mess & Food',hostel:'My Hostel Room',attendance:'Attendance',results:'Semester Results',courses:'Course Registration','calendar-page':'Academic Calendar'};
+function navigate(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  const btn=document.querySelector(`[data-page="${id}"]`);
+  if(btn)btn.classList.add('active');
+  document.getElementById('topbarTitle').textContent=pageNames[id]||id;
+  if(window.innerWidth<=900)closeSidebar();
+}
+
+// ── SIDEBAR TOGGLE ─────────────────────────────────────────────────────
+function toggleSidebar(){const s=document.getElementById('sidebar'),o=document.getElementById('sbOverlay');s.classList.toggle('open');o.classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('open')}
+
+// ── TABS ───────────────────────────────────────────────────────────────
+function setTab(el){el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active')}
+
+// ── MODALS ─────────────────────────────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')}));
+
+// ── TOAST ──────────────────────────────────────────────────────────────
+function showToast(msg,type='info'){
+  const icons={success:'✅',error:'❌',info:'ℹ️'};
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.innerHTML=`<span class="toast-icon">${icons[type]||'💬'}</span><span class="toast-text">${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">✕</button>`;
+  document.getElementById('toast-container').prepend(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(20px)';t.style.transition='all .3s';setTimeout(()=>t.remove(),300)},4000);
+}
+
+// ── STUDENT TYPE ───────────────────────────────────────────────────────
+function setStudentType(type){
+  const hSec=document.getElementById('hostelSection');
+  const hM1=document.getElementById('hostelMenu1');
+  const hM2=document.getElementById('hostelMenu2');
+  const hFee=document.getElementById('hostelFeeRow');
+  const mFee=document.getElementById('messFeeRow');
+  const lbl=document.getElementById('studentTypeLabel');
+  const hBtn=document.getElementById('hostelBtn');
+  const dBtn=document.getElementById('dayBtn');
+  if(type==='hostel'){
+    hSec.style.display='';hM1.style.display='';hM2.style.display='';
+    hFee.style.display='';mFee.style.display='';
+    lbl.textContent='Hostel';lbl.style.background='var(--accent)';
+    hBtn.classList.add('active');dBtn.classList.remove('active');
+    document.getElementById('totalFee').textContent='₹91,500';
+    showToast('Switched to Hostel mode 🏠','info');
+  } else {
+    hSec.style.display='none';hM1.style.display='none';hM2.style.display='none';
+    hFee.style.display='none';mFee.style.display='none';
+    lbl.textContent='Day';lbl.style.background='var(--accent4)';
+    dBtn.classList.add('active');hBtn.classList.remove('active');
+    document.getElementById('totalFee').textContent='₹61,500';
+    showToast('Switched to Day Scholar mode ☀️','info');
+  }
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────
+window.addEventListener('load',()=>{
+  // Animate attendance rings on load
+  setTimeout(()=>{
+    document.querySelectorAll('.ring-fill').forEach(r=>{
+      const orig=r.getAttribute('stroke-dashoffset');
+      r.style.strokeDashoffset='238.76';
+      requestAnimationFrame(()=>{setTimeout(()=>{r.style.transition='stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1)';r.style.strokeDashoffset=orig},100)});
+    });
+  },300);
+  // Welcome toast
+  setTimeout(()=>showToast('Welcome back, Rahul! 👋 3 new notices.','info'),800);
+});
+</script>
+</body>
+</html>
