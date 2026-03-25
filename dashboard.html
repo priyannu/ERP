@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusOne — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sb-logo"><div class="sb-logo-inner"><div class="sb-logo-mark">🎓</div><h1>CampusOne<span>Student Portal</span></h1></div></div>
+  <div class="sb-profile" onclick="navigate('dashboard')">
+    <div class="sb-avatar">RK</div>
+    <div class="sb-profile-info"><strong>Rahul Kumar</strong><small>CS-2021-0842</small></div>
+    <span class="sb-badge" id="studentTypeLabel">Hostel</span>
+  </div>
+  <div class="sb-status"><div class="sb-status-dot"></div><span>Semester 6 · Active</span></div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item active" data-page="dashboard" onclick="navigate('dashboard')"><span class="sb-item-icon">⊞</span>Dashboard</button>
+    <button class="sb-item " data-page="notices" onclick="navigate('notices')"><span class="sb-item-icon">🔔</span>Notices & Alerts<span class="sb-item-badge">3</span></button>
+    <button class="sb-item " data-page="calendar-page" onclick="navigate('calendar-page')"><span class="sb-item-icon">📅</span>Academic Calendar</button>
+    <div class="sb-section-label">Academics</div>
+    <button class="sb-item " data-page="courses" onclick="navigate('courses')"><span class="sb-item-icon">📚</span>Course Registration</button>
+    <button class="sb-item " data-page="assignments" onclick="navigate('assignments')"><span class="sb-item-icon">📝</span>Assignments<span class="sb-item-badge yellow">2</span></button>
+    <button class="sb-item " data-page="attendance" onclick="navigate('attendance')"><span class="sb-item-icon">✅</span>Attendance</button>
+    <button class="sb-item " data-page="results" onclick="navigate('results')"><span class="sb-item-icon">🏆</span>Semester Results</button>
+    <button class="sb-item " data-page="library" onclick="navigate('library')"><span class="sb-item-icon">🏛</span>Library</button>
+    <div class="sb-section-label">Campus Life</div>
+    <button class="sb-item " data-page="faculty" onclick="navigate('faculty')"><span class="sb-item-icon">👨‍🏫</span>Faculty Info</button>
+    <button class="sb-item " data-page="fees" onclick="navigate('fees')"><span class="sb-item-icon">💳</span>Fees & Payments</button>
+    <button class="sb-item " data-page="dispensary" onclick="navigate('dispensary')"><span class="sb-item-icon">🏥</span>Dispensary</button>
+    <button class="sb-item " data-page="tech-help" onclick="navigate('tech-help')"><span class="sb-item-icon">🔧</span>Technical Help<span class="sb-item-badge red">1</span></button>
+    <div class="sb-section-label" id="hostelSection">Hostel</div>
+    <button class="sb-item " id="hostelMenu1" data-page="hostel" onclick="navigate('hostel')"><span class="sb-item-icon">🏠</span>My Hostel Room</button>
+    <button class="sb-item " id="hostelMenu2" data-page="mess" onclick="navigate('mess')"><span class="sb-item-icon">🍽</span>Mess & Food</button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Student Type</div>
+    <div class="sb-type-toggle">
+      <button class="sb-type-btn active" id="hostelBtn" onclick="setStudentType('hostel')">🏠 Hostel</button>
+      <button class="sb-type-btn" id="dayBtn" onclick="setStudentType('day')">☀️ Day Scholar</button>
+    </div>
+  </div>
+</nav>
+<div id="main">
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title">Dashboard</div>
+    <div class="topbar-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search courses, faculty, notices…"></div>
+    <div class="topbar-actions">
+      <div class="topbar-btn" onclick="navigate('notices')" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-btn" onclick="showToast('Profile settings coming soon','info')" title="Settings">⚙️</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22);border-color:var(--accent);color:var(--accent);font-weight:700;font-size:13px">RK</div>
+    </div>
+  </header>
+
+  <div class="page" id="page-dashboard">
+    <!-- Welcome Banner -->
+    <div class="welcome-banner" style="background:linear-gradient(135deg,#1a2040,#1c2850);border:1px solid #3a4a80;border-radius:var(--radius);padding:28px 32px;margin-bottom:24px;position:relative;overflow:hidden">
+      <div style="position:absolute;right:-60px;top:-60px;width:220px;height:220px;background:radial-gradient(circle,#5b8fff22 0%,transparent 70%)"></div>
+      <div style="position:absolute;right:60px;bottom:-40px;width:140px;height:140px;background:radial-gradient(circle,#a78bfa18 0%,transparent 70%)"></div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#5b8fff1a;border:1px solid #5b8fff33;padding:4px 12px;border-radius:99px;font-size:11px;color:var(--accent);font-weight:600;margin-bottom:12px">✨ Semester 6 · Ongoing</div>
+      <div style="font-family:var(--font-head);font-size:26px;font-weight:800;margin-bottom:6px">Good morning, Rahul! 👋</div>
+      <div style="font-size:14px;color:var(--text2);max-width:500px">You have 2 assignments due this week and 1 pending fee. Stay on track!</div>
+      <div style="display:flex;gap:10px;margin-top:20px">
+        <button class="btn btn-primary" onclick="navigate('assignments')">📝 View Assignments</button>
+        <button class="btn btn-secondary" onclick="navigate('fees')">💳 Pay Fees</button>
+      </div>
+    </div>
+    <!-- Stats Row -->
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon blue">📊</div><div class="stat-info"><div class="stat-val">78%</div><div class="stat-label">Attendance</div><div class="stat-trend up">↑ 2% this week</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">🎯</div><div class="stat-info"><div class="stat-val">8.4</div><div class="stat-label">Current CGPA</div><div class="stat-trend up">↑ 0.2 from last sem</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">📝</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">Pending Assignments</div><div class="stat-trend down">Due soon!</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">📚</div><div class="stat-info"><div class="stat-val">5</div><div class="stat-label">Active Courses</div><div class="stat-trend up">18 credits</div></div></div>
+    </div>
+    <!-- Quick Actions -->
+    <div class="section-head"><div><div class="section-title">Quick Actions</div><div class="section-sub">Frequently used features</div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;margin-bottom:28px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('assignments')"><div style="font-size:26px">📤</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Submit Assignment</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('results')"><div style="font-size:26px">📊</div><div style="font-size:12px;font-weight:600;color:var(--text2)">View Results</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('library')"><div style="font-size:26px">🏛</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Library Access</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('dispensary')"><div style="font-size:26px">💊</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Book Appointment</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('tech-help')"><div style="font-size:26px">🔧</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Raise Ticket</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('mess')"><div style="font-size:26px">🍽</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Today's Menu</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('fees')"><div style="font-size:26px">💳</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Pay Fees</div></div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;transition:all .2s;text-align:center" onmouseover="this.style.borderColor='var(--accent)';this.style.transform='translateY(-3px)'" onmouseout="this.style.borderColor='var(--border)';this.style.transform=''" onclick="navigate('courses')"><div style="font-size:26px">📋</div><div style="font-size:12px;font-weight:600;color:var(--text2)">Register Course</div></div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="section-head" style="margin-bottom:14px"><div><div class="section-title">Recent Notices</div></div><button class="btn btn-secondary btn-sm" onclick="navigate('notices')">View All</button></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="notice-card unread" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#5b8fff18">📢</div>
+            <div class="notice-body">
+              <div class="notice-title">End Semester Exam Schedule Released</div>
+              <div class="notice-desc">Final exam timetable for Semester 6 is now available. Check your hall tickets.</div>
+              <div class="notice-foot"><span class="notice-time">2 hours ago</span><span class="pill blue">Academic</span></div>
+            </div>
+          </div>
+          <div class="notice-card unread" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#f59e0b18">⚠️</div>
+            <div class="notice-body">
+              <div class="notice-title">Fee Payment Deadline: March 31</div>
+              <div class="notice-desc">Last date for semester fee payment without penalty. Pay before deadline.</div>
+              <div class="notice-foot"><span class="notice-time">1 day ago</span><span class="pill yellow">Finance</span></div>
+            </div>
+          </div>
+          <div class="notice-card" onclick="navigate('notices')">
+            <div class="notice-icon" style="background:#34d39918">🏆</div>
+            <div class="notice-body">
+              <div class="notice-title">Hackathon 2024 — Registrations Open</div>
+              <div class="notice-desc">Annual college hackathon. Form teams of 3-4. Register by March 28.</div>
+              <div class="notice-foot"><span class="notice-time">3 days ago</span><span class="pill green">Event</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-head" style="margin-bottom:14px"><div><div class="section-title">Today's Schedule</div><div class="section-sub">Wednesday, March 25</div></div></div>
+        <div class="card" style="padding:16px">
+          <div class="timeline">
+            <div class="tl-item"><div class="tl-dot" style="background:#5b8fff18;border-color:var(--accent);color:var(--accent)">📘</div><div class="tl-content"><div class="tl-title">Data Structures & Algorithms</div><div class="tl-meta">09:00 – 10:00 AM · Room 302 · Dr. Priya Sharma</div></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:#a78bfa18;border-color:var(--accent2);color:var(--accent2)">⚙️</div><div class="tl-content"><div class="tl-title">Operating Systems Lab</div><div class="tl-meta">10:30 – 12:30 PM · Lab 2 · Prof. Anand Mehta</div></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3)">🍽</div><div class="tl-content"><div class="tl-title">Lunch Break</div><div class="tl-meta">12:30 – 1:30 PM · Cafeteria / Mess Hall</div></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4)">🌐</div><div class="tl-content"><div class="tl-title">Computer Networks</div><div class="tl-meta">1:30 – 2:30 PM · Room 214 · Dr. Rajan Patel</div></div></div>
+            <div class="tl-item"><div class="tl-dot" style="background:#f8717118;border-color:var(--accent5);color:var(--accent5)">📝</div><div class="tl-content"><div class="tl-title">ML Assignment Due</div><div class="tl-meta">11:59 PM · Online Submission</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+window.addEventListener('load', () => {
+  setTimeout(() => showToast('Welcome back, Rahul! 👋 3 new notices.', 'info'), 800);
+});
+</script>
+</div><!-- end #main -->
+<div id="toast-container"></div>
+<script src="shared.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusOne — Course Registration</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sb-logo"><div class="sb-logo-inner"><div class="sb-logo-mark">🎓</div><h1>CampusOne<span>Student Portal</span></h1></div></div>
+  <div class="sb-profile" onclick="navigate('dashboard')">
+    <div class="sb-avatar">RK</div>
+    <div class="sb-profile-info"><strong>Rahul Kumar</strong><small>CS-2021-0842</small></div>
+    <span class="sb-badge" id="studentTypeLabel">Hostel</span>
+  </div>
+  <div class="sb-status"><div class="sb-status-dot"></div><span>Semester 6 · Active</span></div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item " data-page="dashboard" onclick="navigate('dashboard')"><span class="sb-item-icon">⊞</span>Dashboard</button>
+    <button class="sb-item " data-page="notices" onclick="navigate('notices')"><span class="sb-item-icon">🔔</span>Notices & Alerts<span class="sb-item-badge">3</span></button>
+    <button class="sb-item " data-page="calendar-page" onclick="navigate('calendar-page')"><span class="sb-item-icon">📅</span>Academic Calendar</button>
+    <div class="sb-section-label">Academics</div>
+    <button class="sb-item active" data-page="courses" onclick="navigate('courses')"><span class="sb-item-icon">📚</span>Course Registration</button>
+    <button class="sb-item " data-page="assignments" onclick="navigate('assignments')"><span class="sb-item-icon">📝</span>Assignments<span class="sb-item-badge yellow">2</span></button>
+    <button class="sb-item " data-page="attendance" onclick="navigate('attendance')"><span class="sb-item-icon">✅</span>Attendance</button>
+    <button class="sb-item " data-page="results" onclick="navigate('results')"><span class="sb-item-icon">🏆</span>Semester Results</button>
+    <button class="sb-item " data-page="library" onclick="navigate('library')"><span class="sb-item-icon">🏛</span>Library</button>
+    <div class="sb-section-label">Campus Life</div>
+    <button class="sb-item " data-page="faculty" onclick="navigate('faculty')"><span class="sb-item-icon">👨‍🏫</span>Faculty Info</button>
+    <button class="sb-item " data-page="fees" onclick="navigate('fees')"><span class="sb-item-icon">💳</span>Fees & Payments</button>
+    <button class="sb-item " data-page="dispensary" onclick="navigate('dispensary')"><span class="sb-item-icon">🏥</span>Dispensary</button>
+    <button class="sb-item " data-page="tech-help" onclick="navigate('tech-help')"><span class="sb-item-icon">🔧</span>Technical Help<span class="sb-item-badge red">1</span></button>
+    <div class="sb-section-label" id="hostelSection">Hostel</div>
+    <button class="sb-item " id="hostelMenu1" data-page="hostel" onclick="navigate('hostel')"><span class="sb-item-icon">🏠</span>My Hostel Room</button>
+    <button class="sb-item " id="hostelMenu2" data-page="mess" onclick="navigate('mess')"><span class="sb-item-icon">🍽</span>Mess & Food</button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Student Type</div>
+    <div class="sb-type-toggle">
+      <button class="sb-type-btn active" id="hostelBtn" onclick="setStudentType('hostel')">🏠 Hostel</button>
+      <button class="sb-type-btn" id="dayBtn" onclick="setStudentType('day')">☀️ Day Scholar</button>
+    </div>
+  </div>
+</nav>
+<div id="main">
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title">Course Registration</div>
+    <div class="topbar-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search courses, faculty, notices…"></div>
+    <div class="topbar-actions">
+      <div class="topbar-btn" onclick="navigate('notices')" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-btn" onclick="showToast('Profile settings coming soon','info')" title="Settings">⚙️</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22);border-color:var(--accent);color:var(--accent);font-weight:700;font-size:13px">RK</div>
+    </div>
+  </header>
+
+  <div class="page" id="page-courses">
+    <div class="section-head"><div><div class="section-title">Course Registration</div><div class="section-sub">Semester 6 — Registration open till March 30</div></div><button class="btn btn-primary" onclick="showToast('Registration saved!','success')">💾 Save Registration</button></div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-icon blue">📚</div><div class="stat-info"><div class="stat-val">5</div><div class="stat-label">Registered</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">18</div><div class="stat-label">Credits Enrolled</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">⚠️</div><div class="stat-info"><div class="stat-val">22</div><div class="stat-label">Max Credits</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple">📋</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">Electives Left</div></div></div>
+    </div>
+    <div class="alert info" style="margin-bottom:20px">📌 <span>You must register between 15–22 credits. Minimum 4 core subjects required.</span></div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between"><div style="font-size:14px;font-weight:700">Core Subjects — Semester 6</div><span class="pill blue">Required</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--surface2)"><th style="color:var(--text3);font-size:11px">Code</th><th style="color:var(--text3);font-size:11px">Subject</th><th style="color:var(--text3);font-size:11px">Credits</th><th style="color:var(--text3);font-size:11px">Status</th></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-601</div><div style="font-size:13.5px;font-weight:600">Data Structures & Algorithms</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Dr. Priya Sharma · Mon/Wed/Fri 9-10 AM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">4C</span><span class="pill green">✓ Registered</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-602</div><div style="font-size:13.5px;font-weight:600">Operating Systems</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Prof. Anand Mehta · Tue/Thu 10:30-12 AM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">4C</span><span class="pill green">✓ Registered</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-603</div><div style="font-size:13.5px;font-weight:600">Computer Networks</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Dr. Rajan Patel · Mon/Wed 1:30-2:30 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">3C</span><span class="pill green">✓ Registered</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-604</div><div style="font-size:13.5px;font-weight:600">Database Management Systems</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Dr. Neha Kapoor · Tue/Fri 2-3 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">3C</span><span class="pill green">✓ Registered</span></div>
+      <div style="padding:18px 20px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between"><div style="font-size:14px;font-weight:700">Elective Subjects</div><span class="pill yellow">Choose 2</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-E01</div><div style="font-size:13.5px;font-weight:600">Machine Learning</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Prof. Vikram Rao · Mon/Wed 3-4:30 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">3C</span><span class="pill green">✓ Registered</span></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-E02</div><div style="font-size:13.5px;font-weight:600">Blockchain Technology</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Dr. Kiran Shah · Tue/Thu 4-5 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">2C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-E03</div><div style="font-size:13.5px;font-weight:600">Cloud Computing</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Prof. Arun Das · Fri 2-4 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">2C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+      <div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:16px;padding:14px 18px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"><div><div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:2px">CS-E04</div><div style="font-size:13.5px;font-weight:600">Cybersecurity Fundamentals</div><div style="font-size:11px;color:var(--text2);margin-top:2px">Dr. Seema Roy · Mon/Thu 5-6 PM</div></div><span style="background:var(--surface2);color:var(--text);font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;font-family:var(--font-mono)">3C</span><button class="btn btn-secondary btn-xs" onclick="showToast('Course added!','success')">+ Add</button></div>
+    </div>
+  </div>
+</div><!-- end #main -->
+<div id="toast-container"></div>
+<script src="shared.js"></script>
+</body>
+</html>

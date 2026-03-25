@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusOne — My Hostel Room</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sb-logo"><div class="sb-logo-inner"><div class="sb-logo-mark">🎓</div><h1>CampusOne<span>Student Portal</span></h1></div></div>
+  <div class="sb-profile" onclick="navigate('dashboard')">
+    <div class="sb-avatar">RK</div>
+    <div class="sb-profile-info"><strong>Rahul Kumar</strong><small>CS-2021-0842</small></div>
+    <span class="sb-badge" id="studentTypeLabel">Hostel</span>
+  </div>
+  <div class="sb-status"><div class="sb-status-dot"></div><span>Semester 6 · Active</span></div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item " data-page="dashboard" onclick="navigate('dashboard')"><span class="sb-item-icon">⊞</span>Dashboard</button>
+    <button class="sb-item " data-page="notices" onclick="navigate('notices')"><span class="sb-item-icon">🔔</span>Notices & Alerts<span class="sb-item-badge">3</span></button>
+    <button class="sb-item " data-page="calendar-page" onclick="navigate('calendar-page')"><span class="sb-item-icon">📅</span>Academic Calendar</button>
+    <div class="sb-section-label">Academics</div>
+    <button class="sb-item " data-page="courses" onclick="navigate('courses')"><span class="sb-item-icon">📚</span>Course Registration</button>
+    <button class="sb-item " data-page="assignments" onclick="navigate('assignments')"><span class="sb-item-icon">📝</span>Assignments<span class="sb-item-badge yellow">2</span></button>
+    <button class="sb-item " data-page="attendance" onclick="navigate('attendance')"><span class="sb-item-icon">✅</span>Attendance</button>
+    <button class="sb-item " data-page="results" onclick="navigate('results')"><span class="sb-item-icon">🏆</span>Semester Results</button>
+    <button class="sb-item " data-page="library" onclick="navigate('library')"><span class="sb-item-icon">🏛</span>Library</button>
+    <div class="sb-section-label">Campus Life</div>
+    <button class="sb-item " data-page="faculty" onclick="navigate('faculty')"><span class="sb-item-icon">👨‍🏫</span>Faculty Info</button>
+    <button class="sb-item " data-page="fees" onclick="navigate('fees')"><span class="sb-item-icon">💳</span>Fees & Payments</button>
+    <button class="sb-item " data-page="dispensary" onclick="navigate('dispensary')"><span class="sb-item-icon">🏥</span>Dispensary</button>
+    <button class="sb-item " data-page="tech-help" onclick="navigate('tech-help')"><span class="sb-item-icon">🔧</span>Technical Help<span class="sb-item-badge red">1</span></button>
+    <div class="sb-section-label" id="hostelSection">Hostel</div>
+    <button class="sb-item active" id="hostelMenu1" data-page="hostel" onclick="navigate('hostel')"><span class="sb-item-icon">🏠</span>My Hostel Room</button>
+    <button class="sb-item " id="hostelMenu2" data-page="mess" onclick="navigate('mess')"><span class="sb-item-icon">🍽</span>Mess & Food</button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Student Type</div>
+    <div class="sb-type-toggle">
+      <button class="sb-type-btn active" id="hostelBtn" onclick="setStudentType('hostel')">🏠 Hostel</button>
+      <button class="sb-type-btn" id="dayBtn" onclick="setStudentType('day')">☀️ Day Scholar</button>
+    </div>
+  </div>
+</nav>
+<div id="main">
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title">My Hostel Room</div>
+    <div class="topbar-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search courses, faculty, notices…"></div>
+    <div class="topbar-actions">
+      <div class="topbar-btn" onclick="navigate('notices')" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-btn" onclick="showToast('Profile settings coming soon','info')" title="Settings">⚙️</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22);border-color:var(--accent);color:var(--accent);font-weight:700;font-size:13px">RK</div>
+    </div>
+  </header>
+
+  <div class="page" id="page-hostel">
+    <div class="section-head"><div><div class="section-title">My Hostel Room</div><div class="section-sub">Room details, roommates and requests</div></div><button class="btn btn-primary" onclick="openModal('complaintModal')">📋 Raise Complaint</button></div>
+    <div class="grid-2" style="margin-bottom:24px">
+      <div style="background:linear-gradient(135deg,#1a2040,#1c2850);border:1px solid #3a4a80;border-radius:var(--radius);padding:24px;position:relative;overflow:hidden">
+        <div style="content:'🏠';position:absolute;right:20px;top:20px;font-size:60px;opacity:.15">🏠</div>
+        <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Room Information</div>
+        <div style="font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:4px">Room 204</div>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:16px">Block C · Boys Hostel · 2nd Floor</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">BLOCK</div><div style="font-weight:600">C — Saraswati Block</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">TYPE</div><div style="font-weight:600">Double Sharing</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">WARDEN</div><div style="font-weight:600">Mr. Suresh Nair</div></div>
+          <div><div style="font-size:11px;color:var(--text3);margin-bottom:2px">ALLOTTED</div><div style="font-weight:600">July 2021</div></div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px"><span class="pill green">Active Resident</span><span class="pill blue">Sem 6</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">👥 Roommate</div>
+        <div class="card-sub">Current roommate details</div>
+        <div class="faculty-card" style="background:var(--surface2);margin-bottom:16px;padding:16px">
+          <div class="faculty-avatar" style="background:linear-gradient(135deg,#f87171,#b91c1c);width:50px;height:50px;font-size:18px">AK</div>
+          <div class="faculty-info"><div class="faculty-name">Arjun Kapoor</div><div class="faculty-dept">CS-2021-0856 · 6th Semester</div><div style="font-size:11px;color:var(--text2)">📱 +91 98xxx xxxxx (Ask admin)</div></div>
+        </div>
+        <button class="btn btn-secondary" style="width:100%" onclick="showToast('Roommate change request submitted','info')">🔄 Request Room Change</button>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-title">🔧 Maintenance Requests</div>
+        <div class="card-sub">Open complaints</div>
+        <div class="timeline">
+          <div class="tl-item"><div class="tl-dot" style="background:#f59e0b18;border-color:var(--accent4);color:var(--accent4);font-size:12px">🔨</div><div class="tl-content"><div class="tl-title">Broken cupboard handle</div><div class="tl-meta">Submitted Mar 20 · In Progress</div></div></div>
+          <div class="tl-item"><div class="tl-dot" style="background:#34d39918;border-color:var(--accent3);color:var(--accent3);font-size:12px">✓</div><div class="tl-content"><div class="tl-title">Ceiling fan replacement</div><div class="tl-meta">Resolved Mar 10</div></div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" style="width:100%;margin-top:8px" onclick="openModal('complaintModal')">+ New Complaint</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Rules & Guidelines</div>
+        <div class="card-sub">Important hostel policies</div>
+        <div style="display:flex;flex-direction:column;gap:8px;font-size:12.5px">
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🕙</span><span>Curfew: 10:00 PM (weekdays), 11:00 PM (weekends)</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🚪</span><span>Visitors allowed only in common area till 8 PM</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🍳</span><span>No cooking in rooms — use common kitchen</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>📴</span><span>Generator hours: 10 PM – 6 AM, 2 hrs only</span></div>
+          <div style="display:flex;gap:8px;align-items:flex-start"><span>🚿</span><span>Hot water: 5 AM – 9 AM, 5 PM – 8 PM</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📞 Emergency Contacts</div>
+        <div class="card-sub">Hostel administration</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Warden</div><div style="font-size:11px;color:var(--text2)">Mr. Suresh Nair</div></div><div style="font-family:var(--font-mono);font-size:12px">98765-11122</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Chief Warden</div><div style="font-size:11px;color:var(--text2)">Dr. V. Iyer</div></div><div style="font-family:var(--font-mono);font-size:12px">98765-11100</div></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:12.5px;font-weight:600">Security</div><div style="font-size:11px;color:var(--text2)">24/7 Helpline</div></div><div style="font-family:var(--font-mono);font-size:12px">1800-xxx-xxxx</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div class="modal-overlay" id="complaintModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">📋 Raise Hostel Complaint</div><button class="modal-close" onclick="closeModal('complaintModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-control"><option>Maintenance / Repair</option><option>Cleanliness</option><option>Electricity / Plumbing</option><option>Internet / WiFi</option><option>Security</option><option>Mess Complaint</option><option>Other</option></select></div>
+      <div class="form-group"><label class="form-label">Room Number</label><input class="form-control" value="Room 204, Block C" readonly></div>
+      <div class="form-group"><label class="form-label">Issue Title</label><input class="form-control" placeholder="Brief title of the complaint"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" placeholder="Describe the issue in detail…"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('complaintModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('complaintModal');showToast('Complaint submitted! Warden will contact you soon.','success')">Submit Complaint</button></div>
+  </div>
+</div>
+</div><!-- end #main -->
+<div id="toast-container"></div>
+<script src="shared.js"></script>
+</body>
+</html>

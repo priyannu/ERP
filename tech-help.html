@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusOne — Technical Help</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+</head>
+<body>
+<div class="sb-overlay" id="sbOverlay" onclick="toggleSidebar()"></div>
+<nav id="sidebar">
+  <div class="sb-logo"><div class="sb-logo-inner"><div class="sb-logo-mark">🎓</div><h1>CampusOne<span>Student Portal</span></h1></div></div>
+  <div class="sb-profile" onclick="navigate('dashboard')">
+    <div class="sb-avatar">RK</div>
+    <div class="sb-profile-info"><strong>Rahul Kumar</strong><small>CS-2021-0842</small></div>
+    <span class="sb-badge" id="studentTypeLabel">Hostel</span>
+  </div>
+  <div class="sb-status"><div class="sb-status-dot"></div><span>Semester 6 · Active</span></div>
+  <div class="sb-nav">
+    <div class="sb-section-label">Overview</div>
+    <button class="sb-item " data-page="dashboard" onclick="navigate('dashboard')"><span class="sb-item-icon">⊞</span>Dashboard</button>
+    <button class="sb-item " data-page="notices" onclick="navigate('notices')"><span class="sb-item-icon">🔔</span>Notices & Alerts<span class="sb-item-badge">3</span></button>
+    <button class="sb-item " data-page="calendar-page" onclick="navigate('calendar-page')"><span class="sb-item-icon">📅</span>Academic Calendar</button>
+    <div class="sb-section-label">Academics</div>
+    <button class="sb-item " data-page="courses" onclick="navigate('courses')"><span class="sb-item-icon">📚</span>Course Registration</button>
+    <button class="sb-item " data-page="assignments" onclick="navigate('assignments')"><span class="sb-item-icon">📝</span>Assignments<span class="sb-item-badge yellow">2</span></button>
+    <button class="sb-item " data-page="attendance" onclick="navigate('attendance')"><span class="sb-item-icon">✅</span>Attendance</button>
+    <button class="sb-item " data-page="results" onclick="navigate('results')"><span class="sb-item-icon">🏆</span>Semester Results</button>
+    <button class="sb-item " data-page="library" onclick="navigate('library')"><span class="sb-item-icon">🏛</span>Library</button>
+    <div class="sb-section-label">Campus Life</div>
+    <button class="sb-item " data-page="faculty" onclick="navigate('faculty')"><span class="sb-item-icon">👨‍🏫</span>Faculty Info</button>
+    <button class="sb-item " data-page="fees" onclick="navigate('fees')"><span class="sb-item-icon">💳</span>Fees & Payments</button>
+    <button class="sb-item " data-page="dispensary" onclick="navigate('dispensary')"><span class="sb-item-icon">🏥</span>Dispensary</button>
+    <button class="sb-item active" data-page="tech-help" onclick="navigate('tech-help')"><span class="sb-item-icon">🔧</span>Technical Help<span class="sb-item-badge red">1</span></button>
+    <div class="sb-section-label" id="hostelSection">Hostel</div>
+    <button class="sb-item " id="hostelMenu1" data-page="hostel" onclick="navigate('hostel')"><span class="sb-item-icon">🏠</span>My Hostel Room</button>
+    <button class="sb-item " id="hostelMenu2" data-page="mess" onclick="navigate('mess')"><span class="sb-item-icon">🍽</span>Mess & Food</button>
+  </div>
+  <div class="sb-footer">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;font-weight:600">Student Type</div>
+    <div class="sb-type-toggle">
+      <button class="sb-type-btn active" id="hostelBtn" onclick="setStudentType('hostel')">🏠 Hostel</button>
+      <button class="sb-type-btn" id="dayBtn" onclick="setStudentType('day')">☀️ Day Scholar</button>
+    </div>
+  </div>
+</nav>
+<div id="main">
+  <header class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="topbar-title">Technical Help</div>
+    <div class="topbar-search"><span style="color:var(--text3)">🔍</span><input type="text" placeholder="Search courses, faculty, notices…"></div>
+    <div class="topbar-actions">
+      <div class="topbar-btn" onclick="navigate('notices')" title="Notifications">🔔<span class="notif-dot"></span></div>
+      <div class="topbar-btn" onclick="showToast('Profile settings coming soon','info')" title="Settings">⚙️</div>
+      <div class="topbar-btn" style="background:linear-gradient(135deg,#5b8fff22,#a78bfa22);border-color:var(--accent);color:var(--accent);font-weight:700;font-size:13px">RK</div>
+    </div>
+  </header>
+
+  <div class="page" id="page-tech-help">
+    <div class="section-head"><div><div class="section-title">Technical Help</div><div class="section-sub">Raise, track and resolve technical issues</div></div><button class="btn btn-primary" onclick="openModal('ticketModal')">+ Raise Ticket</button></div>
+    <div class="grid-4" style="margin-bottom:24px">
+      <div class="stat-card"><div class="stat-icon red">🔴</div><div class="stat-info"><div class="stat-val">1</div><div class="stat-label">Open Tickets</div></div></div>
+      <div class="stat-card"><div class="stat-icon yellow">🟡</div><div class="stat-info"><div class="stat-val">2</div><div class="stat-label">In Progress</div></div></div>
+      <div class="stat-card"><div class="stat-icon green">✅</div><div class="stat-info"><div class="stat-val">7</div><div class="stat-label">Resolved</div></div></div>
+      <div class="stat-card"><div class="stat-icon blue">⭐</div><div class="stat-info"><div class="stat-val">4.6</div><div class="stat-label">Avg Rating</div></div></div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="setTab(this)">All Tickets</button>
+      <button class="tab" onclick="setTab(this)">Network Issues</button>
+      <button class="tab" onclick="setTab(this)">Software</button>
+      <button class="tab" onclick="setTab(this)">Hardware</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all .2s">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+          <div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">#TKT-2024-0048</div><div style="font-size:13.5px;font-weight:600">WiFi connectivity issue in Room 204, Block C</div></div>
+          <span class="pill red">Open</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">The WiFi signal in my room is extremely weak. I'm unable to attend online classes and download study material. Issue persists for 3 days.</div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--text3)">Raised: Mar 23, 2024</span><span class="pill gray">Network</span><span class="pill red">High Priority</span><button class="btn btn-secondary btn-xs">View Thread</button></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all .2s">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+          <div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">#TKT-2024-0039</div><div style="font-size:13.5px;font-weight:600">Lab computer #12 not booting — Lab 2</div></div>
+          <span class="pill yellow">In Progress</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">System shows black screen after POST. Hard drive might be faulty. Assigned to IT team.</div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--text3)">Raised: Mar 18, 2024</span><span class="pill gray">Hardware</span><button class="btn btn-secondary btn-xs">View Thread</button></div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all .2s;opacity:.75">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px">
+          <div><div style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">#TKT-2024-0031</div><div style="font-size:13.5px;font-weight:600">Cannot access LMS portal — login loop</div></div>
+          <span class="pill green">Resolved</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-bottom:10px">LMS password reset issue resolved. Browser cache was causing redirect loop. Fixed on Mar 15.</div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--text3)">Resolved: Mar 15, 2024</span><span class="pill gray">Software</span><span class="pill green">⭐ Rated 5</span></div>
+      </div>
+    </div>
+    <div style="margin-top:24px;padding:20px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border)">
+      <div style="font-family:var(--font-head);font-size:15px;font-weight:800;margin-bottom:14px">💡 Self-Service Knowledge Base</div>
+      <div class="grid-2">
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">📶 How to connect to campus WiFi</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">🔑 Reset LMS / Portal password</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">🖨 Printer setup instructions</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start" onclick="showToast('Opening guide…','info')">💻 VPN access for remote learning</button>
+      </div>
+    </div>
+  </div>
+<div class="modal-overlay" id="ticketModal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title">🔧 Raise Tech Ticket</div><button class="modal-close" onclick="closeModal('ticketModal')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Category</label><select class="form-control"><option>Network / WiFi</option><option>Software / LMS</option><option>Hardware</option><option>Email / Accounts</option><option>Printing</option><option>Other</option></select></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Location</label><input class="form-control" placeholder="Room/Lab number"></div>
+        <div class="form-group"><label class="form-label">Priority</label><select class="form-control"><option>Low</option><option selected>Medium</option><option>High</option><option>Critical</option></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Issue Title</label><input class="form-control" placeholder="Brief description of the issue"></div>
+      <div class="form-group"><label class="form-label">Detailed Description</label><textarea class="form-control" placeholder="Describe the issue in detail — when did it start, what you tried, etc."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-secondary" onclick="closeModal('ticketModal')">Cancel</button><button class="btn btn-primary" onclick="closeModal('ticketModal');showToast('Ticket raised! Ticket ID: #TKT-2024-0049 📋','success')">Submit Ticket</button></div>
+  </div>
+</div>
+</div><!-- end #main -->
+<div id="toast-container"></div>
+<script src="shared.js"></script>
+</body>
+</html>
